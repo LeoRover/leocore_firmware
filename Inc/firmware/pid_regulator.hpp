@@ -1,5 +1,4 @@
-#ifndef __PID_REGULATOR_H__
-#define __PID_REGULATOR_H__
+#pragma once
 
 #include <cstdint>
 
@@ -18,5 +17,3 @@ class PIDRegulator {
   float last_error_;
   bool has_last_error_;
 };
-
-#endif

@@ -23,7 +23,7 @@ class MotorController {
 
   /**
    * @brief Set the power to the motor
-   * @param power value between -1000 and 1000
+   * @param power value between -PWM_RANGE and PWM_RANGE
    */
   void setPower(int16_t power);
 

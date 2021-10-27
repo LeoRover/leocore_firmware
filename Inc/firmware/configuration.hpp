@@ -1,0 +1,50 @@
+#include "main.h"
+#include "usart.h"
+
+#include "firmware/motor_controller.hpp"
+
+// UART used for rosserial communication
+static UART_HandleTypeDef& ROSSERIAL_UART = huart2;
+
+// The timer CCR value corresponding to 100% PWM duty cycle
+const uint16_t PWM_RANGE = 1000;
+
+// Number of encoder readings to remember when estimating the wheel velocity
+const uint16_t ENCODER_BUFFER_SIZE = 10;
+
+// Motor driver configurations
+const MotorConfiguration MOT_A_CONFIG = {
+    .nsleep = {H_4_NSLEEP_GPIO_Port, H_4_NSLEEP_Pin},
+    .phase = {H_4_PHASE_GPIO_Port, H_4_PHASE_Pin},
+    .mode = {H_4_MODE_GPIO_Port, H_4_MODE_Pin},
+    .fault = {H_4_FAULT_GPIO_Port, H_4_FAULT_Pin},
+    .enc_cnt = &TIM5->CNT,
+    .pwm_ccr = &TIM1->CCR4,
+};
+
+const MotorConfiguration MOT_B_CONFIG = {
+    .nsleep = {H_3_NSLEEP_GPIO_Port, H_3_NSLEEP_Pin},
+    .phase = {H_3_PHASE_GPIO_Port, H_3_PHASE_Pin},
+    .mode = {H_3_MODE_GPIO_Port, H_3_MODE_Pin},
+    .fault = {H_3_FAULT_GPIO_Port, H_3_FAULT_Pin},
+    .enc_cnt = &TIM4->CNT,
+    .pwm_ccr = &TIM1->CCR3,
+};
+
+const MotorConfiguration MOT_C_CONFIG = {
+    .nsleep = {H_1_NSLEEP_GPIO_Port, H_1_NSLEEP_Pin},
+    .phase = {H_1_PHASE_GPIO_Port, H_1_PHASE_Pin},
+    .mode = {H_1_MODE_GPIO_Port, H_1_MODE_Pin},
+    .fault = {H_1_FAULT_GPIO_Port, H_1_FAULT_Pin},
+    .enc_cnt = &TIM3->CNT,
+    .pwm_ccr = &TIM1->CCR1,
+};
+
+const MotorConfiguration MOT_D_CONFIG = {
+    .nsleep = {H_2_NSLEEP_GPIO_Port, H_2_NSLEEP_Pin},
+    .phase = {H_2_PHASE_GPIO_Port, H_2_PHASE_Pin},
+    .mode = {H_2_MODE_GPIO_Port, H_2_MODE_Pin},
+    .fault = {H_2_FAULT_GPIO_Port, H_2_FAULT_Pin},
+    .enc_cnt = &TIM2->CNT,
+    .pwm_ccr = &TIM1->CCR2,
+};

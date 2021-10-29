@@ -18,12 +18,10 @@ void Parameters::load(ros::NodeHandle &nh) {
 
   nh.getParam("core2/motors/encoder_resolution", &motor_encoder_resolution, 1,
               TIMEOUT);
-  nh.getParam("core2/motors/max_speed", &motor_max_speed, 1, TIMEOUT);
   nh.getParam("core2/motors/pid/p", &motor_pid_p, 1, TIMEOUT);
   nh.getParam("core2/motors/pid/i", &motor_pid_i, 1, TIMEOUT);
   nh.getParam("core2/motors/pid/d", &motor_pid_d, 1, TIMEOUT);
   nh.getParam("core2/motors/power_limit", &motor_power_limit, 1, TIMEOUT);
-  nh.getParam("core2/motors/torque_limit", &motor_torque_limit, 1, TIMEOUT);
 
   nh.getParam("core2/diff_drive/wheel_radius", &dd_wheel_radius, 1, TIMEOUT);
   nh.getParam("core2/diff_drive/wheel_separation", &dd_wheel_separation, 1,

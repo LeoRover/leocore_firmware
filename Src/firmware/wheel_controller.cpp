@@ -49,11 +49,11 @@ void WheelController::update(const uint32_t dt_ms) {
   }
 }
 
-void WheelController::setSpeed(const float speed) {
+void WheelController::setTargetVelocity(const float speed) {
   v_target_ = (speed / (2.0F * PI)) * params.motor_encoder_resolution;
 }
 
-float WheelController::getSpeed() {
+float WheelController::getVelocity() {
   return (v_now_ / params.motor_encoder_resolution) * (2.0F * PI);
 }
 

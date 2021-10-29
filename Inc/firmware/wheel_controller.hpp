@@ -27,12 +27,12 @@ class WheelController {
   /**
    * @brief Set the target velocity of the wheel in rad/s
    */
-  void setSpeed(float speed);
+  void setTargetVelocity(float speed);
 
   /**
-   * @brief Get the current velocity of the motor
+   * @brief Get the current velocity of the motor in rad/s
    */
-  float getSpeed();
+  float getVelocity();
 
   /**
    * @brief Get the current power (PWM Duty) applied to the motor

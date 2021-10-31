@@ -8,10 +8,9 @@
 
 static constexpr float PI = 3.141592653F;
 
-WheelController::WheelController(const MotorConfiguration& motor_conf,
-                                 const bool reverse_polarity)
-    : motor_(motor_conf), encoder_buffer_(ENCODER_BUFFER_SIZE) {
-  if (reverse_polarity) {
+WheelController::WheelController(const WheelConfiguration& wheel_conf)
+    : motor_(wheel_conf.motor_conf), encoder_buffer_(ENCODER_BUFFER_SIZE) {
+  if (wheel_conf.reverse_polarity) {
     motor_.setMotorPolarity(Polarity::Reversed);
     motor_.setEncoderPolarity(Polarity::Reversed);
   }

@@ -9,9 +9,14 @@
 #include "firmware/pid_regulator.hpp"
 #include "firmware/utils.hpp"
 
+struct WheelConfiguration {
+  MotorConfiguration motor_conf;
+  bool reverse_polarity;
+};
+
 class WheelController {
  public:
-  WheelController(const MotorConfiguration& motor_conf, bool reverse_polarity);
+  WheelController(const WheelConfiguration& wheel_conf);
 
   /**
    * @brief Initialize and enable the wheel controller

@@ -1,7 +1,10 @@
 #include "main.h"
 #include "usart.h"
 
+#include "firmware/diff_drive_controller.hpp"
+#include "firmware/gpio_compat.h"
 #include "firmware/motor_controller.hpp"
+#include "firmware/wheel_controller.hpp"
 
 // UART used for rosserial communication
 static UART_HandleTypeDef& ROSSERIAL_UART = huart1;
@@ -11,6 +14,9 @@ const uint16_t PWM_RANGE = 1000;
 
 // Number of encoder readings to remember when estimating the wheel velocity
 const uint16_t ENCODER_BUFFER_SIZE = 10;
+
+// Informative LED GPIO
+const GPIO LED = {LED_GPIO_Port, LED_Pin};
 
 // Motor driver configurations
 const MotorConfiguration MOT_A_CONFIG = {
@@ -47,4 +53,31 @@ const MotorConfiguration MOT_D_CONFIG = {
     .fault = {H2_FAULT_GPIO_Port, H2_FAULT_Pin},
     .enc_cnt = &TIM2->CNT,
     .pwm_ccr = &TIM9->CCR1,
+};
+
+const WheelConfiguration WHEEL_FL_CONFIG = {
+    .motor_conf = MOT_C_CONFIG,
+    .reverse_polarity = true,
+};
+
+const WheelConfiguration WHEEL_RL_CONFIG = {
+    .motor_conf = MOT_D_CONFIG,
+    .reverse_polarity = true,
+};
+
+const WheelConfiguration WHEEL_FR_CONFIG = {
+    .motor_conf = MOT_A_CONFIG,
+    .reverse_polarity = false,
+};
+
+const WheelConfiguration WHEEL_RR_CONFIG = {
+    .motor_conf = MOT_B_CONFIG,
+    .reverse_polarity = false,
+};
+
+const DiffDriveConfiguration DD_CONFIG = {
+    .wheel_FL_conf = WHEEL_FL_CONFIG,
+    .wheel_RL_conf = WHEEL_RL_CONFIG,
+    .wheel_FR_conf = WHEEL_FR_CONFIG,
+    .wheel_RR_conf = WHEEL_RR_CONFIG,
 };

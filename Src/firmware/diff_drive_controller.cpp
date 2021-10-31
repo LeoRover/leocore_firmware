@@ -8,10 +8,10 @@
 static constexpr float PI = 3.141592653F;
 
 DiffDriveController::DiffDriveController(const DiffDriveConfiguration& dd_conf)
-    : wheel_FL_(dd_conf.wheel_FL_conf, dd_conf.wheel_FL_reverse_polarity),
-      wheel_RL_(dd_conf.wheel_RL_conf, dd_conf.wheel_RL_reverse_polarity),
-      wheel_FR_(dd_conf.wheel_FR_conf, dd_conf.wheel_FR_reverse_polarity),
-      wheel_RR_(dd_conf.wheel_RR_conf, dd_conf.wheel_RR_reverse_polarity) {}
+    : wheel_FL_(dd_conf.wheel_FL_conf),
+      wheel_RL_(dd_conf.wheel_RL_conf),
+      wheel_FR_(dd_conf.wheel_FR_conf),
+      wheel_RR_(dd_conf.wheel_RR_conf) {}
 
 void DiffDriveController::init() {
   wheel_FL_.init();

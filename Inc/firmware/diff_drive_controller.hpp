@@ -17,9 +17,10 @@ struct Odom {
 };
 
 struct DiffDriveConfiguration {
-  MotorConfiguration wheel_FL_conf, wheel_RL_conf, wheel_FR_conf, wheel_RR_conf;
-  bool wheel_FL_reverse_polarity, wheel_RL_reverse_polarity,
-      wheel_FR_reverse_polarity, wheel_RR_reverse_polarity;
+  WheelConfiguration wheel_FL_conf;
+  WheelConfiguration wheel_RL_conf;
+  WheelConfiguration wheel_FR_conf;
+  WheelConfiguration wheel_RR_conf;
 };
 
 class DiffDriveController {

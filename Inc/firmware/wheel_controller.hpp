@@ -19,38 +19,40 @@ class WheelController {
   WheelController(const WheelConfiguration& wheel_conf);
 
   /**
-   * @brief Initialize and enable the wheel controller
+   * Initialize the Wheel Controller.
+   * Should be called after all ROS parameters are loaded.
+   * Sets the PID regulator parameters and initializes the Motor Controller.
    */
   void init();
 
   /**
-   * @brief Perform an update routine
+   * Perform an update routine.
    * @param dt_ms Time elapsed since the last call to update function
    */
   void update(uint32_t dt_ms);
 
   /**
-   * @brief Set the target velocity of the wheel in rad/s
+   * Set the target velocity of the wheel in rad/s.
    */
   void setTargetVelocity(float speed);
 
   /**
-   * @brief Get the current velocity of the motor in rad/s
+   * Get the current velocity of the motor in rad/s.
    */
   float getVelocity();
 
   /**
-   * @brief Get the current power (PWM Duty) applied to the motor
+   * Get the current power (PWM Duty) applied to the motor.
    */
   int16_t getPower();
 
   /**
-   * @brief Get the current distance traversed by the wheel in radians
+   * Get the current distance traversed by the wheel in radians.
    */
   int32_t getDistance();
 
   /**
-   * @brief Reset the distance traversed by the wheel
+   * Reset the distance traversed by the wheel.
    */
   void resetDistance();
 

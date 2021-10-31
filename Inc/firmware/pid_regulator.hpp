@@ -8,22 +8,22 @@ class PIDRegulator {
   PIDRegulator(float Kp, float Ki, float Kd, float range);
 
   /**
-   * @brief Set the PID coefficients
+   * Set the PID coefficients.
    */
   void setCoeffs(float Kp, float Ki, float Kd);
 
   /**
-   * @brief Set the range of the regulator output
+   * Set the range of the regulator output.
    */
   void setRange(float range);
 
   /**
-   * @brief Reset the regulator to initial state
+   * Reset the regulator to initial state.
    */
   void reset();
 
   /**
-   * @brief Perform an update routine of the regulator
+   * Perform an update routine of the regulator.
    * @param error Current error
    * @param dt_ms Time elapsed since the last call to update function
    * @return Output of the regulator

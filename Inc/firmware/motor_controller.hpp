@@ -17,35 +17,36 @@ class MotorController {
   MotorController(const MotorConfiguration &config) : config_(config){};
 
   /**
-   * @brief Initialize the motor
+   * Initialize the Motor Controller.
+   * Configures the motor driver by setting gpio states.
    */
   void init();
 
   /**
-   * @brief Set the power to the motor
+   * Set the power to the motor.
    * @param power value between -PWM_RANGE and PWM_RANGE
    */
   void setPower(int16_t power);
 
   /**
-   * @brief Get the number of encoder ticks.
+   * Get the number of encoder ticks.
    * @return encoder ticks
    */
   int32_t getEncoderCnt();
 
   /**
-   * @brief Set the number of encoder ticks to 0
+   * Set the number of encoder ticks to 0.
    */
   void resetEncoderCnt();
 
   /**
-   * @brief Set motor polarity
+   * Set motor polarity.
    * @param polarity motor polarity
    */
   void setMotorPolarity(Polarity polarity);
 
   /**
-   * @brief Set encoder polarity
+   * Set encoder polarity.
    * @param polarity encoder polarity
    */
   void setEncoderPolarity(Polarity polarity);

@@ -30,6 +30,7 @@ class MotorController {
 
   /**
    * Get the number of encoder ticks.
+   * Must be called at least once per (2^14) encoder ticks 
    * @return encoder ticks
    */
   int32_t getEncoderCnt();
@@ -55,4 +56,7 @@ class MotorController {
   MotorConfiguration config_;
   Polarity motor_polarity_ = Polarity::Normal;
   Polarity encoder_polarity_ = Polarity::Normal;
+
+  uint8_t ticks_prev_quarter_ = 0;
+  int32_t ticks_offset_ = 0;
 };

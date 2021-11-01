@@ -18,13 +18,26 @@ void MotorController::setPower(int16_t power) {
 }
 
 int32_t MotorController::getEncoderCnt() {
-  // TODO handle over and underflow of 16 bit timers
-  int16_t ticks = *config_.enc_cnt;
+  uint16_t ticks_timer = *config_.enc_cnt;
+  uint8_t ticks_quarter = ticks_timer >> 14;
+
+  if (ticks_prev_quarter_ == 3 && ticks_quarter == 0)
+    ticks_offset_ += (1 << 16);
+  if (ticks_prev_quarter_ == 0 && ticks_quarter == 3)
+    ticks_offset_ -= (1 << 16);
+
+  ticks_prev_quarter_ = ticks_quarter;
+
+  int32_t ticks = ticks_offset_ + ticks_timer;
   if (encoder_polarity_ == Polarity::Reversed) ticks *= -1;
   return ticks;
 }
 
-void MotorController::resetEncoderCnt() { *config_.enc_cnt = 0; }
+void MotorController::resetEncoderCnt() {
+  ticks_prev_quarter_ = 0;
+  ticks_offset_ = 0;
+  *config_.enc_cnt = 0;
+}
 
 void MotorController::setMotorPolarity(Polarity polarity) {
   motor_polarity_ = polarity;

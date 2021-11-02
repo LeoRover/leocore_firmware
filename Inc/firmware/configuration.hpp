@@ -2,7 +2,7 @@
 #include "usart.h"
 
 #include "firmware/diff_drive_controller.hpp"
-#include "firmware/gpio_compat.h"
+#include "firmware/gpio_compat.hpp"
 #include "firmware/motor_controller.hpp"
 
 // UART used for rosserial communication

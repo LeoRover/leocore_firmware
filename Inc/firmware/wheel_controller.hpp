@@ -49,7 +49,7 @@ class WheelController {
   /**
    * Get the current distance traversed by the wheel in radians.
    */
-  int32_t getDistance();
+  float getDistance();
 
   /**
    * Reset the distance traversed by the wheel.

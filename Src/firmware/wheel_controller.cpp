@@ -59,7 +59,7 @@ float WheelController::getVelocity() {
 
 int16_t WheelController::getPower() { return power_; }
 
-int32_t WheelController::getDistance() {
+float WheelController::getDistance() {
   return (ticks_now_ / params.motor_encoder_resolution) * (2.0F * PI);
 }
 

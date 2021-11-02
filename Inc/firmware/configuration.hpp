@@ -1,9 +1,13 @@
+#pragma once
+
 #include "main.h"
 #include "usart.h"
 
 #include "firmware/diff_drive_controller.hpp"
 #include "firmware/gpio_compat.hpp"
 #include "firmware/motor_controller.hpp"
+
+const char* const FIRMWARE_VERSION = "0.0.0";
 
 // UART used for rosserial communication
 static UART_HandleTypeDef& ROSSERIAL_UART = huart1;

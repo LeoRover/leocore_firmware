@@ -112,13 +112,16 @@ int main(void)
   HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL);
   HAL_TIM_Encoder_Start(&htim5, TIM_CHANNEL_ALL);
 
-  fmain();
+  HAL_TIM_Base_Start_IT(&htim11);
+
+  setup();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    loop();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -171,6 +174,12 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+  if (htim->Instance == TIM11) {
+    update();
+  }
+}
 /* USER CODE END 4 */
 
 /**

@@ -21,6 +21,7 @@ void WheelController::init() {
   v_reg_.setRange(
       std::min(static_cast<float>(PWM_RANGE), params.motor_power_limit));
   motor_.init();
+  motor_.resetEncoderCnt();
   enable();
 }
 

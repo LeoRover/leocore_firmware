@@ -36,7 +36,7 @@ const uint8_t IMU_PUB_PERIOD = 3;
 static volatile uint16_t& BATTERY_ADC = adc_buff[4];
 
 // How much Volts per precision of Battery ADC
-const float BATTERY_ADC_TO_VOLTAGE = 32.0F / 4096.0F; // 0-32 V range, 12 bit precision
+const float BATTERY_ADC_TO_VOLTAGE = 32.0F / 4095.0F; // 0-32 V range, 12 bit precision
 
 // Motor driver configurations
 const MotorConfiguration MOT_A_CONFIG = {

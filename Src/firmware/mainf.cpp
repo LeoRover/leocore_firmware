@@ -9,7 +9,7 @@
 #include <std_msgs/Int32.h>
 #include <std_srvs/Trigger.h>
 
-#include "usart.h"
+#include "mainf.h"
 
 #include "firmware/configuration.hpp"
 #include "firmware/parameters.hpp"
@@ -144,16 +144,22 @@ void update() {
   if (!configured || !nh.connected()) return;
 
   ++cnt;
-  dc.update(10);
+  dc.update(UPDATE_PERIOD);
 
-  if (cnt % 5 == 0 && !publish_joint) {
+  if (cnt % BATTERY_PUB_PERIOD == 0 && !publish_battery) {
+    battery.data = static_cast<float>(adc_buff[4]) * (32.0F / 4096.0F);
+
+    publish_battery = true;
+  }
+
+  if (cnt % JOINTS_PUB_PERIOD == 0 && !publish_joint) {
     joint_states.header.stamp = nh.now();
     dc.updateWheelStates();
 
     publish_joint = true;
   }
 
-  if (cnt % 5 == 0 && !publish_odom) {
+  if (cnt % ODOM_PUB_PERIOD == 0 && !publish_odom) {
     odom.header.stamp = nh.now();
 
     Odom odo = dc.getOdom();

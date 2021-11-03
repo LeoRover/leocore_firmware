@@ -147,7 +147,7 @@ void update() {
   dc.update(UPDATE_PERIOD);
 
   if (cnt % BATTERY_PUB_PERIOD == 0 && !publish_battery) {
-    battery.data = static_cast<float>(adc_buff[4]) * (32.0F / 4096.0F);
+    battery.data = static_cast<float>(BATTERY_ADC) * BATTERY_ADC_TO_VOLTAGE;
 
     publish_battery = true;
   }

@@ -10,6 +10,7 @@ struct MotorConfiguration {
   GPIO nsleep, phase, mode, fault;
   volatile uint32_t *enc_cnt;
   volatile uint32_t *pwm_ccr;
+  volatile uint16_t *vpropi_adc;
 };
 
 class MotorController {
@@ -30,7 +31,7 @@ class MotorController {
 
   /**
    * Get the number of encoder ticks.
-   * Must be called at least once per (2^14) encoder ticks 
+   * Must be called at least once per (2^14) encoder ticks
    * @return encoder ticks
    */
   int32_t getEncoderCnt();

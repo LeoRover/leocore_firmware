@@ -1,6 +1,7 @@
 #pragma once
 
 #include "main.h"
+#include "mainf.h"
 #include "usart.h"
 
 #include "firmware/diff_drive_controller.hpp"
@@ -31,6 +32,12 @@ const uint8_t JOINTS_PUB_PERIOD = 5;
 const uint8_t ODOM_PUB_PERIOD = 5;
 const uint8_t IMU_PUB_PERIOD = 3;
 
+// Raw value of the Battery ADC
+static volatile uint16_t& BATTERY_ADC = adc_buff[4];
+
+// How much Volts per precision of Battery ADC
+const float BATTERY_ADC_TO_VOLTAGE = 32.0F / 4096.0F; // 0-32 V range, 12 bit precision
+
 // Motor driver configurations
 const MotorConfiguration MOT_A_CONFIG = {
     .nsleep = {H4_NSLEEP_GPIO_Port, H4_NSLEEP_Pin},
@@ -39,6 +46,7 @@ const MotorConfiguration MOT_A_CONFIG = {
     .fault = {H4_FAULT_GPIO_Port, H4_FAULT_Pin},
     .enc_cnt = &TIM5->CNT,
     .pwm_ccr = &TIM1->CCR4,
+    .vpropi_adc = &adc_buff[0],
 };
 
 const MotorConfiguration MOT_B_CONFIG = {
@@ -48,6 +56,7 @@ const MotorConfiguration MOT_B_CONFIG = {
     .fault = {H3_FAULT_GPIO_Port, H3_FAULT_Pin},
     .enc_cnt = &TIM4->CNT,
     .pwm_ccr = &TIM9->CCR2,
+    .vpropi_adc = &adc_buff[1],
 };
 
 const MotorConfiguration MOT_C_CONFIG = {
@@ -57,6 +66,7 @@ const MotorConfiguration MOT_C_CONFIG = {
     .fault = {H1_FAULT_GPIO_Port, H1_FAULT_Pin},
     .enc_cnt = &TIM3->CNT,
     .pwm_ccr = &TIM1->CCR1,
+    .vpropi_adc = &adc_buff[2],
 };
 
 const MotorConfiguration MOT_D_CONFIG = {
@@ -66,6 +76,7 @@ const MotorConfiguration MOT_D_CONFIG = {
     .fault = {H2_FAULT_GPIO_Port, H2_FAULT_Pin},
     .enc_cnt = &TIM2->CNT,
     .pwm_ccr = &TIM9->CCR1,
+    .vpropi_adc = &adc_buff[3],
 };
 
 const DiffDriveConfiguration DD_CONFIG = {

@@ -21,6 +21,16 @@ const uint16_t ENCODER_BUFFER_SIZE = 10;
 // Informative LED GPIO
 const GPIO LED = {LED_GPIO_Port, LED_Pin};
 
+// The period (in milliseconds) between calls to the update() function
+const uint16_t UPDATE_PERIOD = 10;
+
+// The periods (in number of calls to the update() function), at which different
+// data is publihed on the ROS topics
+const uint8_t BATTERY_PUB_PERIOD = 100;
+const uint8_t JOINTS_PUB_PERIOD = 5;
+const uint8_t ODOM_PUB_PERIOD = 5;
+const uint8_t IMU_PUB_PERIOD = 3;
+
 // Motor driver configurations
 const MotorConfiguration MOT_A_CONFIG = {
     .nsleep = {H4_NSLEEP_GPIO_Port, H4_NSLEEP_Pin},

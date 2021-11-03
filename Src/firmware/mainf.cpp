@@ -175,7 +175,7 @@ void update() {
 }
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
-  nh.getHardware()->flush();
+  nh.getHardware()->transferCompletedCallback();
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {

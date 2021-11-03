@@ -32,8 +32,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef ROS_STM32_HARDWARE_H_
-#define ROS_STM32_HARDWARE_H_
+#pragma once
+
+#include <cstring>
 
 #include "stm32f4xx_hal.h"
 #include "stm32f4xx_hal_uart.h"
@@ -42,19 +43,27 @@ class STM32Hardware {
  protected:
   UART_HandleTypeDef *huart;
 
-  const static uint16_t rbuflen = 1024;
+  const static uint16_t rbuflen = 512;
   uint8_t rbuf[rbuflen];
   uint32_t rind;
+
   inline uint32_t getRdmaInd(void) {
     return (rbuflen - __HAL_DMA_GET_COUNTER(huart->hdmarx)) & (rbuflen - 1);
   }
 
-  const static uint16_t tbuflen = 1024;
+  const static uint16_t tbuflen = 512;
   uint8_t tbuf[tbuflen];
-  uint32_t twind, tfind;
+  uint32_t twind;
+  volatile uint32_t tfind, tfind_new;
+
+  inline uint32_t getBufferAvailable() {
+    const uint32_t occupied =
+        tfind <= twind ? twind - tfind : tbuflen - tfind + twind;
+    return tbuflen - occupied;
+  }
 
  public:
-  STM32Hardware() : rind(0), twind(0), tfind(0) {}
+  STM32Hardware() : rind(0), twind(0), tfind(0), tfind_new(0) {}
 
   void setUart(UART_HandleTypeDef *huart) { this->huart = huart; }
 
@@ -80,33 +89,39 @@ class STM32Hardware {
       if (twind != tfind) {
         uint16_t len = tfind < twind ? twind - tfind : tbuflen - tfind;
         HAL_UART_Transmit_DMA(huart, &(tbuf[tfind]), len);
-        tfind = (tfind + len) & (tbuflen - 1);
+        tfind_new = (tfind + len) & (tbuflen - 1);
       }
       mutex = false;
     }
+  }
+
+  void transferCompletedCallback() {
+    tfind = tfind_new;
+    flush();
   }
 
   void write(uint8_t *data, int length) {
     uint16_t n = length;
     n = n <= tbuflen ? n : tbuflen;
 
+    // Block until enough buffer is available
+    while (getBufferAvailable() < n) {
+      HAL_Delay(1);
+    }
+
     uint16_t n_tail = n <= tbuflen - twind ? n : tbuflen - twind;
     memcpy(&(tbuf[twind]), data, n_tail);
-    twind = (twind + n) & (tbuflen - 1);
 
     if (n != n_tail) {
       memcpy(tbuf, &(data[n_tail]), n - n_tail);
     }
 
+    twind = (twind + n) & (tbuflen - 1);
+
     flush();
   }
 
-  unsigned long time() {
-    return HAL_GetTick();
-    ;
-  }
+  unsigned long time() { return HAL_GetTick(); }
 
  protected:
 };
-
-#endif

@@ -54,6 +54,11 @@ void DiffDriveController::updateWheelStates() {
   velocities[1] = static_cast<double>(wheel_RL_.getVelocity());
   velocities[2] = static_cast<double>(wheel_FR_.getVelocity());
   velocities[3] = static_cast<double>(wheel_RR_.getVelocity());
+
+  efforts[0] = static_cast<double>(wheel_FL_.getTorque());
+  efforts[1] = static_cast<double>(wheel_RL_.getTorque());
+  efforts[2] = static_cast<double>(wheel_FR_.getTorque());
+  efforts[3] = static_cast<double>(wheel_RR_.getTorque());
 }
 
 void DiffDriveController::update(uint32_t dt_ms) {

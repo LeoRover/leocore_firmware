@@ -59,6 +59,10 @@ float WheelController::getVelocity() {
 
 int16_t WheelController::getPower() { return power_; }
 
+float WheelController::getTorque() {
+  return motor_.getWindingCurrent() * params.motor_torque_constant;
+}
+
 float WheelController::getDistance() {
   return (ticks_now_ / params.motor_encoder_resolution) * (2.0F * PI);
 }

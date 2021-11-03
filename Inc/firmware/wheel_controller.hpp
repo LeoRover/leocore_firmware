@@ -47,6 +47,11 @@ class WheelController {
   int16_t getPower();
 
   /**
+   * Get the current output torque of the motor.
+   */
+  float getTorque();
+
+  /**
    * Get the current distance traversed by the wheel in radians.
    */
   float getDistance();

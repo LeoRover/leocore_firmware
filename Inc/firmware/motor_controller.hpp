@@ -42,6 +42,11 @@ class MotorController {
   void resetEncoderCnt();
 
   /**
+   * Get motor winding current in Amperes
+   */
+  float getWindingCurrent();
+
+  /**
    * Set motor polarity.
    * @param polarity motor polarity
    */

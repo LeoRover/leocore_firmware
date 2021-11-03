@@ -1,4 +1,5 @@
 #include "firmware/motor_controller.hpp"
+#include "firmware/configuration.hpp"
 
 void MotorController::init() {
   gpio_set(config_.nsleep);  // Wake up the driver
@@ -37,6 +38,10 @@ void MotorController::resetEncoderCnt() {
   ticks_prev_quarter_ = 0;
   ticks_offset_ = 0;
   *config_.enc_cnt = 0;
+}
+
+float MotorController::getWindingCurrent() {
+  return static_cast<float>(*config_.vpropi_adc) * VPROPI_ADC_TO_CURRENT;
 }
 
 void MotorController::setMotorPolarity(Polarity polarity) {

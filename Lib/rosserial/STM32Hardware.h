@@ -67,9 +67,12 @@ class STM32Hardware {
 
   void setUart(UART_HandleTypeDef *huart) { this->huart = huart; }
 
-  void init() { reset_rbuf(); }
-
-  void reset_rbuf(void) { HAL_UART_Receive_DMA(huart, rbuf, rbuflen); }
+  void init() {
+    rind = 0;
+    twind = 0;
+    tfind = 0;
+    HAL_UART_Receive_DMA(huart, rbuf, rbuflen);
+  }
 
   int read() {
     int c = -1;
@@ -95,7 +98,7 @@ class STM32Hardware {
     }
   }
 
-  void transferCompletedCallback() {
+  void TxCpltCallback() {
     tfind = tfind_new;
     flush();
   }
@@ -122,6 +125,4 @@ class STM32Hardware {
   }
 
   unsigned long time() { return HAL_GetTick(); }
-
- protected:
 };

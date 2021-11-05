@@ -175,9 +175,13 @@ void update() {
 }
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
-  nh.getHardware()->transferCompletedCallback();
+  if (huart == &ROSSERIAL_UART) {
+    nh.getHardware()->TxCpltCallback();
+  }
 }
 
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-  nh.getHardware()->reset_rbuf();
+void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart) {
+  if (huart == &ROSSERIAL_UART) {
+    nh.initNode();
+  }
 }

@@ -163,6 +163,7 @@ public:
     bytes_ = 0;
     index_ = 0;
     topic_ = 0;
+    configured_ = false;
   };
 
   /* Start a named port, which may be network server IP, initialize buffers */
@@ -173,6 +174,7 @@ public:
     bytes_ = 0;
     index_ = 0;
     topic_ = 0;
+    configured_ = false;
   };
 
   /**

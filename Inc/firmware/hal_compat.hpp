@@ -21,3 +21,5 @@ inline void gpio_reset(const GPIO& gpio) {
 inline uint32_t time() { return HAL_GetTick(); }
 
 inline void reset() { NVIC_SystemReset(); }
+
+inline void delay(uint32_t delay_ms) { HAL_Delay(delay_ms); }

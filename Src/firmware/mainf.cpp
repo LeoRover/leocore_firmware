@@ -32,6 +32,8 @@ static sensor_msgs::JointState joint_states;
 static ros::Publisher joint_states_pub("joint_states", &joint_states);
 static bool publish_joint = false;
 
+static bool reset_request = false;
+
 static DiffDriveController dc(DD_CONFIG);
 
 void cmdVelCallback(const geometry_msgs::Twist &msg) {
@@ -41,6 +43,13 @@ void cmdVelCallback(const geometry_msgs::Twist &msg) {
 void resetOdometryCallback(const std_srvs::TriggerRequest &req,
                            std_srvs::TriggerResponse &res) {
   dc.resetOdom();
+  res.success = true;
+}
+
+void resetBoardCallback(const std_srvs::TriggerRequest &req,
+                        std_srvs::TriggerResponse &res) {
+  reset_request = true;
+  res.message = "Requested board software reset";
   res.success = true;
 }
 
@@ -65,14 +74,19 @@ void initROS() {
 
   // Services
   static ros::ServiceServer<std_srvs::TriggerRequest, std_srvs::TriggerResponse>
-      reset_odometry_srv("core2/reset_odometry", &resetOdometryCallback);
+      reset_odometry_srv("firmware/reset_odometry", &resetOdometryCallback);
   static ros::ServiceServer<std_srvs::TriggerRequest, std_srvs::TriggerResponse>
-      firmware_version_srv("core2/get_firmware_version", &getFirmwareCallback);
+      firmware_version_srv("firmware/get_firmware_version",
+                           &getFirmwareCallback);
+  static ros::ServiceServer<std_srvs::TriggerRequest, std_srvs::TriggerResponse>
+      reset_board_srv("firmware/reset_board", &resetBoardCallback);
 
   nh.advertiseService<std_srvs::TriggerRequest, std_srvs::TriggerResponse>(
       reset_odometry_srv);
   nh.advertiseService<std_srvs::TriggerRequest, std_srvs::TriggerResponse>(
       firmware_version_srv);
+  nh.advertiseService<std_srvs::TriggerRequest, std_srvs::TriggerResponse>(
+      reset_board_srv);
 }
 
 void setupJoints() {
@@ -140,6 +154,11 @@ void loop() {
 
 void update() {
   static uint32_t cnt = 0;
+
+  if (reset_request) {
+    delay(1000);
+    reset();
+  }
 
   if (!configured || !nh.connected()) return;
 

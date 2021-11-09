@@ -62,15 +62,20 @@ class DiffDriveController {
    */
   void update(uint32_t dt_ms);
 
+  void enable();
+  void disable();
+
   double positions[4];
   double velocities[4];
   double efforts[4];
 
- private:
-  WheelController wheel_FL_;
-  WheelController wheel_RL_;
-  WheelController wheel_FR_;
-  WheelController wheel_RR_;
+  WheelController wheel_FL;
+  WheelController wheel_RL;
+  WheelController wheel_FR;
+  WheelController wheel_RR;
 
+ private:
   Odom odom_;
+  bool enabled_ = false;
+  uint32_t last_command_time_;
 };

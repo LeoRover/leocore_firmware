@@ -8,19 +8,38 @@
 static constexpr float PI = 3.141592653F;
 
 DiffDriveController::DiffDriveController(const DiffDriveConfiguration& dd_conf)
-    : wheel_FL_(dd_conf.wheel_FL_conf),
-      wheel_RL_(dd_conf.wheel_RL_conf),
-      wheel_FR_(dd_conf.wheel_FR_conf),
-      wheel_RR_(dd_conf.wheel_RR_conf) {}
+    : wheel_FL(dd_conf.wheel_FL_conf),
+      wheel_RL(dd_conf.wheel_RL_conf),
+      wheel_FR(dd_conf.wheel_FR_conf),
+      wheel_RR(dd_conf.wheel_RR_conf) {}
 
 void DiffDriveController::init() {
-  wheel_FL_.init();
-  wheel_RL_.init();
-  wheel_FR_.init();
-  wheel_RR_.init();
+  wheel_FL.init();
+  wheel_RL.init();
+  wheel_FR.init();
+  wheel_RR.init();
+}
+
+void DiffDriveController::enable() {
+  wheel_FL.enable();
+  wheel_RL.enable();
+  wheel_FR.enable();
+  wheel_RR.enable();
+  enabled_ = true;
+}
+
+void DiffDriveController::disable() {
+  wheel_FL.disable();
+  wheel_RL.disable();
+  wheel_FR.disable();
+  wheel_RR.disable();
+  enabled_ = false;
 }
 
 void DiffDriveController::setSpeed(const float linear, const float angular) {
+  if (!enabled_) enable();
+  last_command_time_ = time();
+
   const float angular_multiplied =
       angular * params.dd_angular_velocity_multiplier;
   const float wheel_L_lin_vel =
@@ -30,10 +49,10 @@ void DiffDriveController::setSpeed(const float linear, const float angular) {
   const float wheel_L_ang_vel = wheel_L_lin_vel / params.dd_wheel_radius;
   const float wheel_R_ang_vel = wheel_R_lin_vel / params.dd_wheel_radius;
 
-  wheel_FL_.setTargetVelocity(wheel_L_ang_vel);
-  wheel_RL_.setTargetVelocity(wheel_L_ang_vel);
-  wheel_FR_.setTargetVelocity(wheel_R_ang_vel);
-  wheel_RR_.setTargetVelocity(wheel_R_ang_vel);
+  wheel_FL.setTargetVelocity(wheel_L_ang_vel);
+  wheel_RL.setTargetVelocity(wheel_L_ang_vel);
+  wheel_FR.setTargetVelocity(wheel_R_ang_vel);
+  wheel_RR.setTargetVelocity(wheel_R_ang_vel);
 }
 
 Odom DiffDriveController::getOdom() { return odom_; }
@@ -45,33 +64,37 @@ void DiffDriveController::resetOdom() {
 }
 
 void DiffDriveController::updateWheelStates() {
-  positions[0] = static_cast<double>(wheel_FL_.getDistance());
-  positions[1] = static_cast<double>(wheel_RL_.getDistance());
-  positions[2] = static_cast<double>(wheel_FR_.getDistance());
-  positions[3] = static_cast<double>(wheel_RR_.getDistance());
+  positions[0] = static_cast<double>(wheel_FL.getDistance());
+  positions[1] = static_cast<double>(wheel_RL.getDistance());
+  positions[2] = static_cast<double>(wheel_FR.getDistance());
+  positions[3] = static_cast<double>(wheel_RR.getDistance());
 
-  velocities[0] = static_cast<double>(wheel_FL_.getVelocity());
-  velocities[1] = static_cast<double>(wheel_RL_.getVelocity());
-  velocities[2] = static_cast<double>(wheel_FR_.getVelocity());
-  velocities[3] = static_cast<double>(wheel_RR_.getVelocity());
+  velocities[0] = static_cast<double>(wheel_FL.getVelocity());
+  velocities[1] = static_cast<double>(wheel_RL.getVelocity());
+  velocities[2] = static_cast<double>(wheel_FR.getVelocity());
+  velocities[3] = static_cast<double>(wheel_RR.getVelocity());
 
-  efforts[0] = static_cast<double>(wheel_FL_.getTorque());
-  efforts[1] = static_cast<double>(wheel_RL_.getTorque());
-  efforts[2] = static_cast<double>(wheel_FR_.getTorque());
-  efforts[3] = static_cast<double>(wheel_RR_.getTorque());
+  efforts[0] = static_cast<double>(wheel_FL.getTorque());
+  efforts[1] = static_cast<double>(wheel_RL.getTorque());
+  efforts[2] = static_cast<double>(wheel_FR.getTorque());
+  efforts[3] = static_cast<double>(wheel_RR.getTorque());
 }
 
 void DiffDriveController::update(uint32_t dt_ms) {
-  wheel_FL_.update(dt_ms);
-  wheel_RL_.update(dt_ms);
-  wheel_FR_.update(dt_ms);
-  wheel_RR_.update(dt_ms);
+  if (enabled_ && time() - last_command_time_ >
+                      static_cast<uint32_t>(params.dd_input_timeout))
+    disable();
+
+  wheel_FL.update(dt_ms);
+  wheel_RL.update(dt_ms);
+  wheel_FR.update(dt_ms);
+  wheel_RR.update(dt_ms);
 
   // velocity in radians per second
-  const float FL_ang_vel = wheel_FL_.getVelocity();
-  const float RL_ang_vel = wheel_RL_.getVelocity();
-  const float FR_ang_vel = wheel_FR_.getVelocity();
-  const float RR_ang_vel = wheel_RR_.getVelocity();
+  const float FL_ang_vel = wheel_FL.getVelocity();
+  const float RL_ang_vel = wheel_RL.getVelocity();
+  const float FR_ang_vel = wheel_FR.getVelocity();
+  const float RR_ang_vel = wheel_RR.getVelocity();
 
   const float L_ang_vel = (FL_ang_vel + RL_ang_vel) / 2.0F;
   const float R_ang_vel = (FR_ang_vel + RR_ang_vel) / 2.0F;

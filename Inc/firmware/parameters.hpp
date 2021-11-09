@@ -20,7 +20,7 @@ struct Parameters {
   float dd_wheel_radius = 0.0625F;
   float dd_wheel_separation = 0.33F;
   float dd_angular_velocity_multiplier = 1.91F;
-  float dd_input_timeout = 500.0F;
+  int dd_input_timeout = 500;
 
   void load(ros::NodeHandle &nh);
 };

@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 
-#include "firmware/gpio_compat.hpp"
+#include "firmware/hal_compat.hpp"
 
 enum class Polarity { Normal = 0, Reversed = 1 };
 

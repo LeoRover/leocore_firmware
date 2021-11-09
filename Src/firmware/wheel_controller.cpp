@@ -9,10 +9,10 @@
 static constexpr float PI = 3.141592653F;
 
 WheelController::WheelController(const WheelConfiguration& wheel_conf)
-    : motor_(wheel_conf.motor_conf), encoder_buffer_(ENCODER_BUFFER_SIZE) {
+    : motor(wheel_conf.motor_conf), encoder_buffer_(ENCODER_BUFFER_SIZE) {
   if (wheel_conf.reverse_polarity) {
-    motor_.setMotorPolarity(Polarity::Reversed);
-    motor_.setEncoderPolarity(Polarity::Reversed);
+    motor.setMotorPolarity(Polarity::Reversed);
+    motor.setEncoderPolarity(Polarity::Reversed);
   }
 }
 
@@ -20,14 +20,13 @@ void WheelController::init() {
   v_reg_.setCoeffs(params.motor_pid_p, params.motor_pid_i, params.motor_pid_d);
   v_reg_.setRange(
       std::min(static_cast<float>(PWM_RANGE), params.motor_power_limit));
-  motor_.init();
-  motor_.resetEncoderCnt();
-  enable();
+  motor.init();
+  motor.resetEncoderCnt();
 }
 
 void WheelController::update(const uint32_t dt_ms) {
   int32_t ticks_prev = ticks_now_;
-  ticks_now_ = motor_.getEncoderCnt();
+  ticks_now_ = motor.getEncoderCnt();
 
   int32_t new_ticks = ticks_now_ - ticks_prev;
 
@@ -45,7 +44,7 @@ void WheelController::update(const uint32_t dt_ms) {
   if (enabled_) {
     float v_err = v_now_ - v_target_;
     power_ = v_reg_.update(v_err, dt_ms);
-    motor_.setPower(power_);
+    motor.setPower(power_);
   }
 }
 
@@ -60,7 +59,7 @@ float WheelController::getVelocity() {
 int16_t WheelController::getPower() { return power_; }
 
 float WheelController::getTorque() {
-  return motor_.getWindingCurrent() * params.motor_torque_constant;
+  return motor.getWindingCurrent() * params.motor_torque_constant;
 }
 
 float WheelController::getDistance() {
@@ -68,7 +67,7 @@ float WheelController::getDistance() {
 }
 
 void WheelController::resetDistance() {
-  motor_.resetEncoderCnt();
+  motor.resetEncoderCnt();
   ticks_now_ = 0;
 }
 
@@ -82,5 +81,5 @@ void WheelController::enable() {
 void WheelController::disable() {
   enabled_ = false;
   power_ = 0;
-  motor_.setPower(0);
+  motor.setPower(0);
 }

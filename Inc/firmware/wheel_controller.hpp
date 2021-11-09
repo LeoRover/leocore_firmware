@@ -64,8 +64,9 @@ class WheelController {
   void enable();
   void disable();
 
+  MotorController motor;
+
  private:
-  MotorController motor_;
   PIDRegulator v_reg_;
   CircularBuffer<std::pair<int32_t, uint32_t>> encoder_buffer_;
 

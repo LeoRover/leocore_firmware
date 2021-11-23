@@ -1,5 +1,6 @@
 #pragma once
 
+#include "i2c.h"
 #include "main.h"
 #include "mainf.h"
 #include "usart.h"
@@ -12,6 +13,9 @@ const char* const FIRMWARE_VERSION = "0.0.0";
 
 // UART used for rosserial communication
 static UART_HandleTypeDef& ROSSERIAL_UART = huart1;
+
+// I2C used for IMU communication
+static I2C_HandleTypeDef& IMU_I2C = hi2c1;
 
 // The timer CCR value corresponding to 100% PWM duty cycle
 const uint16_t PWM_RANGE = 1000;
@@ -30,7 +34,7 @@ const uint16_t UPDATE_PERIOD = 10;
 const uint8_t BATTERY_PUB_PERIOD = 100;
 const uint8_t JOINTS_PUB_PERIOD = 5;
 const uint8_t ODOM_PUB_PERIOD = 5;
-const uint8_t IMU_PUB_PERIOD = 3;
+const uint8_t IMU_PUB_PERIOD = 1;
 
 // Raw value of the Battery ADC
 static volatile uint16_t& BATTERY_ADC = adc_buff[4];

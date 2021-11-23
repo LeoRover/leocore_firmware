@@ -1,4 +1,5 @@
 #include <cstring>
+#include <cstdio>
 
 #include <ros.h>
 
@@ -8,12 +9,14 @@
 #include <std_msgs/Float32.h>
 #include <std_msgs/Int32.h>
 #include <std_srvs/Trigger.h>
+#include <leo_msgs/Imu.h>
 
 #include "mainf.h"
 
 #include "firmware/configuration.hpp"
 #include "firmware/parameters.hpp"
 #include "firmware/wheel_controller.hpp"
+#include "firmware/imu_receiver.hpp"
 
 static ros::NodeHandle nh;
 static bool configured = false;
@@ -23,18 +26,23 @@ static ros::Publisher battery_pub("battery", &battery);
 static bool publish_battery = false;
 
 static geometry_msgs::TwistStamped odom;
-static ros::Publisher odom_pub("wheel_odom", &odom);
+static ros::Publisher odom_pub("firmware/wheel_odom", &odom);
 static geometry_msgs::PoseStamped pose;
-static ros::Publisher pose_pub("wheel_pose", &pose);
+static ros::Publisher pose_pub("firmware/wheel_pose", &pose);
 static bool publish_odom = false;
 
 static sensor_msgs::JointState joint_states;
 static ros::Publisher joint_states_pub("joint_states", &joint_states);
 static bool publish_joint = false;
 
+static leo_msgs::Imu imu;
+static ros::Publisher imu_pub("firmware/imu", &imu);
+static bool publish_imu = false;
+
 static bool reset_request = false;
 
 static DiffDriveController dc(DD_CONFIG);
+static ImuReceiver imu_receiver(&IMU_I2C);
 
 void cmdVelCallback(const geometry_msgs::Twist &msg) {
   dc.setSpeed(msg.linear.x, msg.angular.z);
@@ -65,6 +73,7 @@ void initROS() {
   nh.advertise(odom_pub);
   nh.advertise(pose_pub);
   nh.advertise(joint_states_pub);
+  nh.advertise(imu_pub);
 
   // Subscribers
   static ros::Subscriber<geometry_msgs::Twist> twist_sub("cmd_vel",
@@ -119,6 +128,8 @@ void setup() {
     nh.spinOnce();
   }
 
+  imu_receiver.init();
+
   params.load(nh);
 
   setupJoints();
@@ -149,6 +160,11 @@ void loop() {
   if (publish_joint) {
     joint_states_pub.publish(&joint_states);
     publish_joint = false;
+  }
+
+  if (publish_imu) {
+    imu_pub.publish(&imu);
+    publish_imu = false;
   }
 }
 
@@ -190,6 +206,21 @@ void update() {
     pose.pose.orientation.w = std::cos(odo.pose_yaw * 0.5F);
 
     publish_odom = true;
+  }
+
+  if (cnt % IMU_PUB_PERIOD == 0 && !publish_imu) {
+    imu_receiver.update();
+
+    imu.stamp = nh.now();
+    imu.temperature = imu_receiver.temp;
+    imu.accel_x = imu_receiver.ax;
+    imu.accel_y = imu_receiver.ay;
+    imu.accel_z = imu_receiver.az;
+    imu.gyro_x = imu_receiver.gx;
+    imu.gyro_y = imu_receiver.gy;
+    imu.gyro_z = imu_receiver.gz;
+
+    publish_imu = true;
   }
 }
 

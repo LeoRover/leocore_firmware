@@ -3,11 +3,6 @@
 #include <ros.h>
 
 struct Parameters {
-  // TF frames
-  char robot_frame_id[50] = "base_link";
-  char odom_frame_id[50] = "odom";
-  char imu_frame_id[50] = "imu";
-
   // Motor
   float motor_encoder_resolution = 878.4F;
   float motor_torque_constant = 1.17647F;

@@ -4,6 +4,9 @@
 
 #include <ros.h>
 
+#include <leo_msgs/WheelOdom.h>
+#include <leo_msgs/WheelStates.h>
+
 #include "firmware/diff_drive_controller.hpp"
 #include "firmware/motor_controller.hpp"
 #include "firmware/wheel_controller.hpp"
@@ -44,7 +47,7 @@ class DiffDriveController {
   /**
    * Get the current odometry.
    */
-  Odom getOdom();
+  leo_msgs::WheelOdom getOdom();
 
   /**
    * Reset the odometry position.
@@ -52,13 +55,15 @@ class DiffDriveController {
   void resetOdom();
 
   /**
-   * Retrieve the wheel states and populate the positions, velocities and
-   * efforts fields with the new values.
+   * Retrieve the wheel states and populate the WheelStates structure fields
+   * with the new values.
+   * @param wheel_states A reference to the structure to modify
    */
-  void updateWheelStates();
+  void updateWheelStates(leo_msgs::WheelStates& wheel_states);
 
   /**
    * Perform an update routine.
+   * @param dt_ms Time elapsed since the last call to update function
    */
   void update(uint32_t dt_ms);
 
@@ -75,7 +80,7 @@ class DiffDriveController {
   WheelController wheel_RR;
 
  private:
-  Odom odom_;
+  leo_msgs::WheelOdom odom_;
   bool enabled_ = false;
   uint32_t last_command_time_;
 };

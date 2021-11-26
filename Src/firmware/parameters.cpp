@@ -7,13 +7,6 @@ static constexpr int TIMEOUT = 1000;
 Parameters params;
 
 void Parameters::load(ros::NodeHandle &nh) {
-  char *robot_frame_id_ptr = robot_frame_id;
-  nh.getParam("leo_hat/robot_frame_id", &robot_frame_id_ptr, 1, TIMEOUT);
-  char *odom_frame_id_ptr = odom_frame_id;
-  nh.getParam("leo_hat/odom_frame_id", &odom_frame_id_ptr, 1, TIMEOUT);
-  char *imu_frame_id_ptr = imu_frame_id;
-  nh.getParam("leo_hat/imu_frame_id", &imu_frame_id_ptr, 1, TIMEOUT);
-
   nh.getParam("leo_hat/motors/encoder_resolution", &motor_encoder_resolution, 1,
               TIMEOUT);
   nh.getParam("leo_hat/motors/torque_constant", &motor_encoder_resolution, 1,

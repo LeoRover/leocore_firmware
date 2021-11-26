@@ -55,29 +55,35 @@ void DiffDriveController::setSpeed(const float linear, const float angular) {
   wheel_RR.setTargetVelocity(wheel_R_ang_vel);
 }
 
-Odom DiffDriveController::getOdom() { return odom_; }
+leo_msgs::WheelOdom DiffDriveController::getOdom() { return odom_; }
 
 void DiffDriveController::resetOdom() {
-  odom_.pose_x = 0.0F;
-  odom_.pose_y = 0.0F;
-  odom_.pose_yaw = 0.0F;
+  odom_.position_x = 0.0F;
+  odom_.position_y = 0.0F;
+  odom_.position_yaw = 0.0F;
 }
 
-void DiffDriveController::updateWheelStates() {
-  positions[0] = static_cast<double>(wheel_FL.getDistance());
-  positions[1] = static_cast<double>(wheel_RL.getDistance());
-  positions[2] = static_cast<double>(wheel_FR.getDistance());
-  positions[3] = static_cast<double>(wheel_RR.getDistance());
+void DiffDriveController::updateWheelStates(
+    leo_msgs::WheelStates& wheel_states) {
+  wheel_states.position[0] = wheel_FL.getDistance();
+  wheel_states.position[1] = wheel_RL.getDistance();
+  wheel_states.position[2] = wheel_FR.getDistance();
+  wheel_states.position[3] = wheel_RR.getDistance();
 
-  velocities[0] = static_cast<double>(wheel_FL.getVelocity());
-  velocities[1] = static_cast<double>(wheel_RL.getVelocity());
-  velocities[2] = static_cast<double>(wheel_FR.getVelocity());
-  velocities[3] = static_cast<double>(wheel_RR.getVelocity());
+  wheel_states.velocity[0] = wheel_FL.getVelocity();
+  wheel_states.velocity[1] = wheel_RL.getVelocity();
+  wheel_states.velocity[2] = wheel_FR.getVelocity();
+  wheel_states.velocity[3] = wheel_RR.getVelocity();
 
-  efforts[0] = static_cast<double>(wheel_FL.getTorque());
-  efforts[1] = static_cast<double>(wheel_RL.getTorque());
-  efforts[2] = static_cast<double>(wheel_FR.getTorque());
-  efforts[3] = static_cast<double>(wheel_RR.getTorque());
+  wheel_states.torque[0] = wheel_FL.getTorque();
+  wheel_states.torque[1] = wheel_RL.getTorque();
+  wheel_states.torque[2] = wheel_FR.getTorque();
+  wheel_states.torque[3] = wheel_RR.getTorque();
+
+  wheel_states.pwm_duty_cycle[0] = wheel_FL.getPWMDutyCycle();
+  wheel_states.pwm_duty_cycle[1] = wheel_RL.getPWMDutyCycle();
+  wheel_states.pwm_duty_cycle[2] = wheel_FR.getPWMDutyCycle();
+  wheel_states.pwm_duty_cycle[3] = wheel_RR.getPWMDutyCycle();
 }
 
 void DiffDriveController::update(uint32_t dt_ms) {
@@ -106,18 +112,18 @@ void DiffDriveController::update(uint32_t dt_ms) {
   const float dt_s = static_cast<float>(dt_ms) * 0.001F;
 
   // linear (m/s) and angular (r/s) velocities of the robot
-  odom_.vel_lin = (L_lin_vel + R_lin_vel) / 2.0F;
-  odom_.vel_ang = (R_lin_vel - L_lin_vel) / params.dd_wheel_separation;
+  odom_.velocity_lin = (L_lin_vel + R_lin_vel) / 2.0F;
+  odom_.velocity_ang = (R_lin_vel - L_lin_vel) / params.dd_wheel_separation;
 
-  odom_.vel_ang /= params.dd_angular_velocity_multiplier;
+  odom_.velocity_ang /= params.dd_angular_velocity_multiplier;
 
   // Integrate the velocity using the rectangle rule
-  odom_.pose_yaw += odom_.vel_ang * dt_s;
-  if (odom_.pose_yaw > 2.0F * PI)
-    odom_.pose_yaw -= 2.0F * PI;
-  else if (odom_.pose_yaw < 0.0F)
-    odom_.pose_yaw += 2.0F * PI;
+  odom_.position_yaw += odom_.velocity_ang * dt_s;
+  if (odom_.position_yaw > 2.0F * PI)
+    odom_.position_yaw -= 2.0F * PI;
+  else if (odom_.position_yaw < 0.0F)
+    odom_.position_yaw += 2.0F * PI;
 
-  odom_.pose_x += odom_.vel_lin * std::cos(odom_.pose_yaw) * dt_s;
-  odom_.pose_y += odom_.vel_lin * std::sin(odom_.pose_yaw) * dt_s;
+  odom_.position_x += odom_.velocity_lin * std::cos(odom_.position_yaw) * dt_s;
+  odom_.position_y += odom_.velocity_lin * std::sin(odom_.position_yaw) * dt_s;
 }

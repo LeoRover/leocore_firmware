@@ -42,9 +42,9 @@ class WheelController {
   float getVelocity();
 
   /**
-   * Get the current power (PWM Duty) applied to the motor.
+   * Get the current PWM Duty cycle applied to the motor.
    */
-  int16_t getPower();
+  float getPWMDutyCycle();
 
   /**
    * Get the current output torque of the motor.

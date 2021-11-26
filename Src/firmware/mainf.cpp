@@ -3,13 +3,12 @@
 
 #include <ros.h>
 
-#include <geometry_msgs/PoseStamped.h>
-#include <geometry_msgs/TwistStamped.h>
-#include <sensor_msgs/JointState.h>
+#include <geometry_msgs/Twist.h>
 #include <std_msgs/Float32.h>
-#include <std_msgs/Int32.h>
 #include <std_srvs/Trigger.h>
 #include <leo_msgs/Imu.h>
+#include <leo_msgs/WheelOdom.h>
+#include <leo_msgs/WheelStates.h>
 
 #include "mainf.h"
 
@@ -22,18 +21,16 @@ static ros::NodeHandle nh;
 static bool configured = false;
 
 static std_msgs::Float32 battery;
-static ros::Publisher battery_pub("battery", &battery);
+static ros::Publisher battery_pub("firmware/battery", &battery);
 static bool publish_battery = false;
 
-static geometry_msgs::TwistStamped odom;
-static ros::Publisher odom_pub("firmware/wheel_odom", &odom);
-static geometry_msgs::PoseStamped pose;
-static ros::Publisher pose_pub("firmware/wheel_pose", &pose);
-static bool publish_odom = false;
+static leo_msgs::WheelOdom wheel_odom;
+static ros::Publisher wheel_odom_pub("firmware/wheel_odom", &wheel_odom);
+static bool publish_wheel_odom = false;
 
-static sensor_msgs::JointState joint_states;
-static ros::Publisher joint_states_pub("joint_states", &joint_states);
-static bool publish_joint = false;
+static leo_msgs::WheelStates wheel_states;
+static ros::Publisher wheel_states_pub("firmware/wheel_states", &wheel_states);
+static bool publish_wheel_states = false;
 
 static leo_msgs::Imu imu;
 static ros::Publisher imu_pub("firmware/imu", &imu);
@@ -70,9 +67,8 @@ void getFirmwareCallback(const std_srvs::TriggerRequest &req,
 void initROS() {
   // Publishers
   nh.advertise(battery_pub);
-  nh.advertise(odom_pub);
-  nh.advertise(pose_pub);
-  nh.advertise(joint_states_pub);
+  nh.advertise(wheel_odom_pub);
+  nh.advertise(wheel_states_pub);
   nh.advertise(imu_pub);
 
   // Subscribers
@@ -98,25 +94,6 @@ void initROS() {
       reset_board_srv);
 }
 
-void setupJoints() {
-  static char *joint_names[] = {
-      (char *)"wheel_FL_joint", (char *)"wheel_RL_joint",
-      (char *)"wheel_FR_joint", (char *)"wheel_RR_joint"};
-  joint_states.name_length = 4;
-  joint_states.name = joint_names;
-  joint_states.position_length = 4;
-  joint_states.position = dc.positions;
-  joint_states.velocity_length = 4;
-  joint_states.velocity = dc.velocities;
-  joint_states.effort_length = 4;
-  joint_states.effort = dc.efforts;
-}
-
-void setupOdom() {
-  odom.header.frame_id = params.robot_frame_id;
-  pose.header.frame_id = params.odom_frame_id;
-}
-
 void setup() {
   nh.getHardware()->setUart(&ROSSERIAL_UART);
   nh.initNode();
@@ -131,9 +108,6 @@ void setup() {
   imu_receiver.init();
 
   params.load(nh);
-
-  setupJoints();
-  setupOdom();
 
   // Initialize Diff Drive Controller
   dc.init();
@@ -151,15 +125,14 @@ void loop() {
     publish_battery = false;
   }
 
-  if (publish_odom) {
-    odom_pub.publish(&odom);
-    pose_pub.publish(&pose);
-    publish_odom = false;
+  if (publish_wheel_odom) {
+    wheel_odom_pub.publish(&wheel_odom);
+    publish_wheel_odom = false;
   }
 
-  if (publish_joint) {
-    joint_states_pub.publish(&joint_states);
-    publish_joint = false;
+  if (publish_wheel_states) {
+    wheel_states_pub.publish(&wheel_states);
+    publish_wheel_states = false;
   }
 
   if (publish_imu) {
@@ -187,25 +160,18 @@ void update() {
     publish_battery = true;
   }
 
-  if (cnt % JOINTS_PUB_PERIOD == 0 && !publish_joint) {
-    joint_states.header.stamp = nh.now();
-    dc.updateWheelStates();
+  if (cnt % JOINTS_PUB_PERIOD == 0 && !publish_wheel_states) {
+    wheel_states.stamp = nh.now();
+    dc.updateWheelStates(wheel_states);
 
-    publish_joint = true;
+    publish_wheel_states = true;
   }
 
-  if (cnt % ODOM_PUB_PERIOD == 0 && !publish_odom) {
-    odom.header.stamp = nh.now();
+  if (cnt % ODOM_PUB_PERIOD == 0 && !publish_wheel_odom) {
+    wheel_odom = dc.getOdom();
+    wheel_odom.stamp = nh.now();
 
-    Odom odo = dc.getOdom();
-    odom.twist.linear.x = odo.vel_lin;
-    odom.twist.angular.z = odo.vel_ang;
-    pose.pose.position.x = odo.pose_x;
-    pose.pose.position.y = odo.pose_y;
-    pose.pose.orientation.z = std::sin(odo.pose_yaw * 0.5F);
-    pose.pose.orientation.w = std::cos(odo.pose_yaw * 0.5F);
-
-    publish_odom = true;
+    publish_wheel_odom = true;
   }
 
   if (cnt % IMU_PUB_PERIOD == 0 && !publish_imu) {

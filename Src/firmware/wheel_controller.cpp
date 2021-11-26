@@ -56,7 +56,9 @@ float WheelController::getVelocity() {
   return (v_now_ / params.motor_encoder_resolution) * (2.0F * PI);
 }
 
-int16_t WheelController::getPower() { return power_; }
+float WheelController::getPWMDutyCycle() {
+  return (static_cast<float>(power_) / static_cast<float>(PWM_RANGE)) * 100.0F;
+}
 
 float WheelController::getTorque() {
   return motor.getWindingCurrent() * params.motor_torque_constant;

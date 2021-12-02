@@ -19,20 +19,20 @@ namespace leo_msgs
       _velocity_lin_type velocity_lin;
       typedef float _velocity_ang_type;
       _velocity_ang_type velocity_ang;
-      typedef float _position_x_type;
-      _position_x_type position_x;
-      typedef float _position_y_type;
-      _position_y_type position_y;
-      typedef float _position_yaw_type;
-      _position_yaw_type position_yaw;
+      typedef float _pose_x_type;
+      _pose_x_type pose_x;
+      typedef float _pose_y_type;
+      _pose_y_type pose_y;
+      typedef float _pose_yaw_type;
+      _pose_yaw_type pose_yaw;
 
     WheelOdom():
       stamp(),
       velocity_lin(0),
       velocity_ang(0),
-      position_x(0),
-      position_y(0),
-      position_yaw(0)
+      pose_x(0),
+      pose_y(0),
+      pose_yaw(0)
     {
     }
 
@@ -72,33 +72,33 @@ namespace leo_msgs
       union {
         float real;
         uint32_t base;
-      } u_position_x;
-      u_position_x.real = this->position_x;
-      *(outbuffer + offset + 0) = (u_position_x.base >> (8 * 0)) & 0xFF;
-      *(outbuffer + offset + 1) = (u_position_x.base >> (8 * 1)) & 0xFF;
-      *(outbuffer + offset + 2) = (u_position_x.base >> (8 * 2)) & 0xFF;
-      *(outbuffer + offset + 3) = (u_position_x.base >> (8 * 3)) & 0xFF;
-      offset += sizeof(this->position_x);
+      } u_pose_x;
+      u_pose_x.real = this->pose_x;
+      *(outbuffer + offset + 0) = (u_pose_x.base >> (8 * 0)) & 0xFF;
+      *(outbuffer + offset + 1) = (u_pose_x.base >> (8 * 1)) & 0xFF;
+      *(outbuffer + offset + 2) = (u_pose_x.base >> (8 * 2)) & 0xFF;
+      *(outbuffer + offset + 3) = (u_pose_x.base >> (8 * 3)) & 0xFF;
+      offset += sizeof(this->pose_x);
       union {
         float real;
         uint32_t base;
-      } u_position_y;
-      u_position_y.real = this->position_y;
-      *(outbuffer + offset + 0) = (u_position_y.base >> (8 * 0)) & 0xFF;
-      *(outbuffer + offset + 1) = (u_position_y.base >> (8 * 1)) & 0xFF;
-      *(outbuffer + offset + 2) = (u_position_y.base >> (8 * 2)) & 0xFF;
-      *(outbuffer + offset + 3) = (u_position_y.base >> (8 * 3)) & 0xFF;
-      offset += sizeof(this->position_y);
+      } u_pose_y;
+      u_pose_y.real = this->pose_y;
+      *(outbuffer + offset + 0) = (u_pose_y.base >> (8 * 0)) & 0xFF;
+      *(outbuffer + offset + 1) = (u_pose_y.base >> (8 * 1)) & 0xFF;
+      *(outbuffer + offset + 2) = (u_pose_y.base >> (8 * 2)) & 0xFF;
+      *(outbuffer + offset + 3) = (u_pose_y.base >> (8 * 3)) & 0xFF;
+      offset += sizeof(this->pose_y);
       union {
         float real;
         uint32_t base;
-      } u_position_yaw;
-      u_position_yaw.real = this->position_yaw;
-      *(outbuffer + offset + 0) = (u_position_yaw.base >> (8 * 0)) & 0xFF;
-      *(outbuffer + offset + 1) = (u_position_yaw.base >> (8 * 1)) & 0xFF;
-      *(outbuffer + offset + 2) = (u_position_yaw.base >> (8 * 2)) & 0xFF;
-      *(outbuffer + offset + 3) = (u_position_yaw.base >> (8 * 3)) & 0xFF;
-      offset += sizeof(this->position_yaw);
+      } u_pose_yaw;
+      u_pose_yaw.real = this->pose_yaw;
+      *(outbuffer + offset + 0) = (u_pose_yaw.base >> (8 * 0)) & 0xFF;
+      *(outbuffer + offset + 1) = (u_pose_yaw.base >> (8 * 1)) & 0xFF;
+      *(outbuffer + offset + 2) = (u_pose_yaw.base >> (8 * 2)) & 0xFF;
+      *(outbuffer + offset + 3) = (u_pose_yaw.base >> (8 * 3)) & 0xFF;
+      offset += sizeof(this->pose_yaw);
       return offset;
     }
 
@@ -140,41 +140,41 @@ namespace leo_msgs
       union {
         float real;
         uint32_t base;
-      } u_position_x;
-      u_position_x.base = 0;
-      u_position_x.base |= ((uint32_t) (*(inbuffer + offset + 0))) << (8 * 0);
-      u_position_x.base |= ((uint32_t) (*(inbuffer + offset + 1))) << (8 * 1);
-      u_position_x.base |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2);
-      u_position_x.base |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3);
-      this->position_x = u_position_x.real;
-      offset += sizeof(this->position_x);
+      } u_pose_x;
+      u_pose_x.base = 0;
+      u_pose_x.base |= ((uint32_t) (*(inbuffer + offset + 0))) << (8 * 0);
+      u_pose_x.base |= ((uint32_t) (*(inbuffer + offset + 1))) << (8 * 1);
+      u_pose_x.base |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2);
+      u_pose_x.base |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3);
+      this->pose_x = u_pose_x.real;
+      offset += sizeof(this->pose_x);
       union {
         float real;
         uint32_t base;
-      } u_position_y;
-      u_position_y.base = 0;
-      u_position_y.base |= ((uint32_t) (*(inbuffer + offset + 0))) << (8 * 0);
-      u_position_y.base |= ((uint32_t) (*(inbuffer + offset + 1))) << (8 * 1);
-      u_position_y.base |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2);
-      u_position_y.base |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3);
-      this->position_y = u_position_y.real;
-      offset += sizeof(this->position_y);
+      } u_pose_y;
+      u_pose_y.base = 0;
+      u_pose_y.base |= ((uint32_t) (*(inbuffer + offset + 0))) << (8 * 0);
+      u_pose_y.base |= ((uint32_t) (*(inbuffer + offset + 1))) << (8 * 1);
+      u_pose_y.base |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2);
+      u_pose_y.base |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3);
+      this->pose_y = u_pose_y.real;
+      offset += sizeof(this->pose_y);
       union {
         float real;
         uint32_t base;
-      } u_position_yaw;
-      u_position_yaw.base = 0;
-      u_position_yaw.base |= ((uint32_t) (*(inbuffer + offset + 0))) << (8 * 0);
-      u_position_yaw.base |= ((uint32_t) (*(inbuffer + offset + 1))) << (8 * 1);
-      u_position_yaw.base |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2);
-      u_position_yaw.base |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3);
-      this->position_yaw = u_position_yaw.real;
-      offset += sizeof(this->position_yaw);
+      } u_pose_yaw;
+      u_pose_yaw.base = 0;
+      u_pose_yaw.base |= ((uint32_t) (*(inbuffer + offset + 0))) << (8 * 0);
+      u_pose_yaw.base |= ((uint32_t) (*(inbuffer + offset + 1))) << (8 * 1);
+      u_pose_yaw.base |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2);
+      u_pose_yaw.base |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3);
+      this->pose_yaw = u_pose_yaw.real;
+      offset += sizeof(this->pose_yaw);
      return offset;
     }
 
     virtual const char * getType() override { return "leo_msgs/WheelOdom"; };
-    virtual const char * getMD5() override { return "f2e196e93e7dad2f6fa270317c31439e"; };
+    virtual const char * getMD5() override { return "5bb892afaf24a6d3bedf13c8fe986f2a"; };
 
   };
 

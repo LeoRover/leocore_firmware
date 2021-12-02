@@ -58,9 +58,9 @@ void DiffDriveController::setSpeed(const float linear, const float angular) {
 leo_msgs::WheelOdom DiffDriveController::getOdom() { return odom_; }
 
 void DiffDriveController::resetOdom() {
-  odom_.position_x = 0.0F;
-  odom_.position_y = 0.0F;
-  odom_.position_yaw = 0.0F;
+  odom_.pose_x = 0.0F;
+  odom_.pose_y = 0.0F;
+  odom_.pose_yaw = 0.0F;
 }
 
 void DiffDriveController::updateWheelStates(
@@ -118,12 +118,12 @@ void DiffDriveController::update(uint32_t dt_ms) {
   odom_.velocity_ang /= params.dd_angular_velocity_multiplier;
 
   // Integrate the velocity using the rectangle rule
-  odom_.position_yaw += odom_.velocity_ang * dt_s;
-  if (odom_.position_yaw > 2.0F * PI)
-    odom_.position_yaw -= 2.0F * PI;
-  else if (odom_.position_yaw < 0.0F)
-    odom_.position_yaw += 2.0F * PI;
+  odom_.pose_yaw += odom_.velocity_ang * dt_s;
+  if (odom_.pose_yaw > 2.0F * PI)
+    odom_.pose_yaw -= 2.0F * PI;
+  else if (odom_.pose_yaw < 0.0F)
+    odom_.pose_yaw += 2.0F * PI;
 
-  odom_.position_x += odom_.velocity_lin * std::cos(odom_.position_yaw) * dt_s;
-  odom_.position_y += odom_.velocity_lin * std::sin(odom_.position_yaw) * dt_s;
+  odom_.pose_x += odom_.velocity_lin * std::cos(odom_.pose_yaw) * dt_s;
+  odom_.pose_y += odom_.velocity_lin * std::sin(odom_.pose_yaw) * dt_s;
 }

@@ -1,21 +1,21 @@
-#include <cstring>
 #include <cstdio>
+#include <cstring>
 
 #include <ros.h>
 
 #include <geometry_msgs/Twist.h>
-#include <std_msgs/Float32.h>
-#include <std_srvs/Trigger.h>
 #include <leo_msgs/Imu.h>
 #include <leo_msgs/WheelOdom.h>
 #include <leo_msgs/WheelStates.h>
+#include <std_msgs/Float32.h>
+#include <std_srvs/Trigger.h>
 
 #include "mainf.h"
 
 #include "firmware/configuration.hpp"
+#include "firmware/imu_receiver.hpp"
 #include "firmware/parameters.hpp"
 #include "firmware/wheel_controller.hpp"
-#include "firmware/imu_receiver.hpp"
 
 static ros::NodeHandle nh;
 static bool configured = false;
@@ -58,9 +58,15 @@ void resetBoardCallback(const std_srvs::TriggerRequest &req,
   res.success = true;
 }
 
-void getFirmwareCallback(const std_srvs::TriggerRequest &req,
-                         std_srvs::TriggerResponse &res) {
+void getFirmwareVersionCallback(const std_srvs::TriggerRequest &req,
+                                std_srvs::TriggerResponse &res) {
   res.message = FIRMWARE_VERSION;
+  res.success = true;
+}
+
+void getBoardTypeCallback(const std_srvs::TriggerRequest &req,
+                          std_srvs::TriggerResponse &res) {
+  res.message = "leo_hat";
   res.success = true;
 }
 
@@ -78,18 +84,24 @@ void initROS() {
   nh.subscribe(twist_sub);
 
   // Services
-  static ros::ServiceServer<std_srvs::TriggerRequest, std_srvs::TriggerResponse>
-      reset_odometry_srv("firmware/reset_odometry", &resetOdometryCallback);
-  static ros::ServiceServer<std_srvs::TriggerRequest, std_srvs::TriggerResponse>
-      firmware_version_srv("firmware/get_firmware_version",
-                           &getFirmwareCallback);
-  static ros::ServiceServer<std_srvs::TriggerRequest, std_srvs::TriggerResponse>
-      reset_board_srv("firmware/reset_board", &resetBoardCallback);
+  using TriggerService =
+      ros::ServiceServer<std_srvs::TriggerRequest, std_srvs::TriggerResponse>;
+
+  static TriggerService reset_odometry_srv("firmware/reset_odometry",
+                                           &resetOdometryCallback);
+  static TriggerService firmware_version_srv("firmware/get_firmware_version",
+                                             &getFirmwareVersionCallback);
+  static TriggerService board_type_srv("firmware/get_board_type",
+                                       &getBoardTypeCallback);
+  static TriggerService reset_board_srv("firmware/reset_board",
+                                        &resetBoardCallback);
 
   nh.advertiseService<std_srvs::TriggerRequest, std_srvs::TriggerResponse>(
       reset_odometry_srv);
   nh.advertiseService<std_srvs::TriggerRequest, std_srvs::TriggerResponse>(
       firmware_version_srv);
+  nh.advertiseService<std_srvs::TriggerRequest, std_srvs::TriggerResponse>(
+      board_type_srv);
   nh.advertiseService<std_srvs::TriggerRequest, std_srvs::TriggerResponse>(
       reset_board_srv);
 }

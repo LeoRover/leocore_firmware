@@ -22,10 +22,10 @@ void ImuReceiver::update() {
   icm_.readData(ICM42605Data);
 
   temp = static_cast<float>(ICM42605Data[0]) * TEMP_RESOLUTION + TEMP_OFFSET;
-  ax = static_cast<float>(ICM42605Data[1]) * ares_ * GRAVITATIONAL_ACCELERATION;
-  ay = static_cast<float>(ICM42605Data[2]) * ares_ * GRAVITATIONAL_ACCELERATION;
-  az = static_cast<float>(ICM42605Data[3]) * ares_ * GRAVITATIONAL_ACCELERATION;
-  gx = static_cast<float>(ICM42605Data[4]) * gres_ * DEGREE_TO_RADIAN;
-  gy = static_cast<float>(ICM42605Data[5]) * gres_ * DEGREE_TO_RADIAN;
-  gz = static_cast<float>(ICM42605Data[6]) * gres_ * DEGREE_TO_RADIAN;
+  ax = static_cast<float>(ICM42605Data[2]) * ares_ * GRAVITATIONAL_ACCELERATION;
+  ay = static_cast<float>(ICM42605Data[1]) * ares_ * GRAVITATIONAL_ACCELERATION;
+  az = -static_cast<float>(ICM42605Data[3]) * ares_ * GRAVITATIONAL_ACCELERATION;
+  gx = static_cast<float>(ICM42605Data[5]) * gres_ * DEGREE_TO_RADIAN;
+  gy = static_cast<float>(ICM42605Data[4]) * gres_ * DEGREE_TO_RADIAN;
+  gz = -static_cast<float>(ICM42605Data[6]) * gres_ * DEGREE_TO_RADIAN;
 }

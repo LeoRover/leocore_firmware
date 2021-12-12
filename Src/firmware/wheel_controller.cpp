@@ -42,8 +42,13 @@ void WheelController::update(const uint32_t dt_ms) {
   v_now_ = static_cast<float>(ticks_sum_) / (dt_sum_ * 0.001F);
 
   if (enabled_) {
-    float v_err = v_now_ - v_target_;
-    power_ = v_reg_.update(v_err, dt_ms);
+    if (v_now_ == 0.0F && v_target_ == 0.0F) {
+      v_reg_.reset();
+      power_ = 0;
+    } else {
+      float v_err = v_now_ - v_target_;
+      power_ = v_reg_.update(v_err, dt_ms);
+    }
     motor.setPower(power_);
   }
 }

@@ -23,6 +23,8 @@ static bool configured = false;
 static std_msgs::Float32 battery;
 static ros::Publisher battery_pub("firmware/battery", &battery);
 static bool publish_battery = false;
+static CircularBuffer<float> battery_buffer_(BATTERY_BUFFER_SIZE);
+static float battery_average;
 
 static leo_msgs::WheelOdom wheel_odom;
 static ros::Publisher wheel_odom_pub("firmware/wheel_odom", &wheel_odom);
@@ -153,12 +155,22 @@ void loop() {
   }
 }
 
+void updateBattery() {
+  static float battery_sum = 0.0F;
+  float battery_new = static_cast<float>(BATTERY_ADC) * BATTERY_ADC_TO_VOLTAGE;
+  battery_sum += battery_new;
+  battery_sum -= battery_buffer_.push_back(battery_new);
+  battery_average = battery_sum / static_cast<float>(BATTERY_BUFFER_SIZE);
+}
+
 void update() {
+  updateBattery();
+
   if (!configured) return;
 
   dc.update(UPDATE_PERIOD);
 
-  if(!nh.connected()) return;
+  if (!nh.connected()) return;
 
   if (reset_request) {
     delay(1000);
@@ -169,7 +181,7 @@ void update() {
   ++cnt;
 
   if (cnt % BATTERY_PUB_PERIOD == 0 && !publish_battery) {
-    battery.data = static_cast<float>(BATTERY_ADC) * BATTERY_ADC_TO_VOLTAGE;
+    battery.data = battery_average;
 
     publish_battery = true;
   }

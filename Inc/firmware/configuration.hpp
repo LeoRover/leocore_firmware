@@ -23,6 +23,9 @@ const uint16_t PWM_RANGE = 1000;
 // Number of encoder readings to remember when estimating the wheel velocity
 const uint16_t ENCODER_BUFFER_SIZE = 10;
 
+// Number of battery voltage readings to average
+const uint16_t BATTERY_BUFFER_SIZE = 100;
+
 // Informative LED GPIO
 const GPIO LED = {LED_GPIO_Port, LED_Pin};
 

@@ -163,7 +163,8 @@ void update() {
   float battery_new = static_cast<float>(BATTERY_ADC) * BATTERY_ADC_TO_VOLTAGE;
   battery_sum += battery_new;
   battery_sum -= battery_buffer_.push_back(battery_new);
-  battery_average = battery_sum / static_cast<float>(BATTERY_BUFFER_SIZE);
+  battery_average =
+      battery_sum / static_cast<float>(std::min(BATTERY_BUFFER_SIZE, cnt));
 
   if (battery_average < params.battery_min_voltage) {
     if (cnt % 10 == 0) gpio_toggle(LED);

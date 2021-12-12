@@ -18,8 +18,8 @@ class CircularBuffer {
   size_t iter_;
 
  public:
-  explicit CircularBuffer(uint16_t size)
-      : values_(new T[size]), size_(size), iter_(0) {}
+  explicit CircularBuffer(size_t size)
+      : values_(new T[size]()), size_(size), iter_(0) {}
 
   T push_back(T val) {
     T tmp = values_[iter_];

@@ -17,6 +17,8 @@ struct Parameters {
   float dd_angular_velocity_multiplier = 1.91F;
   int dd_input_timeout = 500;
 
+  float battery_min_voltage = 10.0; 
+
   void load(ros::NodeHandle &nh);
 };
 

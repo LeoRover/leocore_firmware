@@ -18,6 +18,10 @@ inline void gpio_reset(const GPIO& gpio) {
   HAL_GPIO_WritePin(gpio.port, gpio.pin, GPIO_PIN_RESET);
 }
 
+inline void gpio_toggle(const GPIO& gpio) {
+  HAL_GPIO_TogglePin(gpio.port, gpio.pin);
+}
+
 inline uint32_t time() { return HAL_GetTick(); }
 
 inline void reset() { NVIC_SystemReset(); }

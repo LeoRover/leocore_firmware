@@ -23,4 +23,5 @@ void Parameters::load(ros::NodeHandle &nh) {
               &dd_angular_velocity_multiplier, 1, TIMEOUT);
   nh.getParam("leo_hat/diff_drive/input_timeout", &dd_input_timeout, 1,
               TIMEOUT);
+  nh.getParam("leo_hat/battery_min_voltage", &battery_min_voltage, 1, TIMEOUT);
 }

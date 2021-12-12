@@ -155,16 +155,25 @@ void loop() {
   }
 }
 
-void updateBattery() {
+void update() {
+  static uint32_t cnt = 0;
+  ++cnt;
+
   static float battery_sum = 0.0F;
   float battery_new = static_cast<float>(BATTERY_ADC) * BATTERY_ADC_TO_VOLTAGE;
   battery_sum += battery_new;
   battery_sum -= battery_buffer_.push_back(battery_new);
   battery_average = battery_sum / static_cast<float>(BATTERY_BUFFER_SIZE);
-}
 
-void update() {
-  updateBattery();
+  if (battery_average < params.battery_min_voltage) {
+    if (cnt % 10 == 0) gpio_toggle(LED);
+  } else {
+    if (!nh.connected()) {
+      if (cnt % 50 == 0) gpio_toggle(LED);
+    } else {
+      gpio_reset(LED);
+    }
+  }
 
   if (!configured) return;
 
@@ -176,9 +185,6 @@ void update() {
     delay(1000);
     reset();
   }
-
-  static uint32_t cnt = 0;
-  ++cnt;
 
   if (cnt % BATTERY_PUB_PERIOD == 0 && !publish_battery) {
     battery.data = battery_average;

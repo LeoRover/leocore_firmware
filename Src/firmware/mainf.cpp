@@ -154,17 +154,19 @@ void loop() {
 }
 
 void update() {
-  static uint32_t cnt = 0;
+  if (!configured) return;
+
+  dc.update(UPDATE_PERIOD);
+
+  if(!nh.connected()) return;
 
   if (reset_request) {
     delay(1000);
     reset();
   }
 
-  if (!configured || !nh.connected()) return;
-
+  static uint32_t cnt = 0;
   ++cnt;
-  dc.update(UPDATE_PERIOD);
 
   if (cnt % BATTERY_PUB_PERIOD == 0 && !publish_battery) {
     battery.data = static_cast<float>(BATTERY_ADC) * BATTERY_ADC_TO_VOLTAGE;

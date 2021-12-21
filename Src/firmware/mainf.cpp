@@ -68,7 +68,7 @@ void getFirmwareVersionCallback(const std_srvs::TriggerRequest &req,
 
 void getBoardTypeCallback(const std_srvs::TriggerRequest &req,
                           std_srvs::TriggerResponse &res) {
-  res.message = "leo_hat";
+  res.message = "leocore";
   res.success = true;
 }
 

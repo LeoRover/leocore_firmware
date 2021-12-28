@@ -18,19 +18,17 @@ float ICM42605::getAres(uint8_t Ascale) {
     case AFS_2G:
       _aRes = 2.0f / 32768.0f;
       return _aRes;
-      break;
     case AFS_4G:
       _aRes = 4.0f / 32768.0f;
       return _aRes;
-      break;
     case AFS_8G:
       _aRes = 8.0f / 32768.0f;
       return _aRes;
-      break;
     case AFS_16G:
       _aRes = 16.0f / 32768.0f;
       return _aRes;
-      break;
+    default:
+      return 0.0;
   }
 }
 
@@ -39,35 +37,29 @@ float ICM42605::getGres(uint8_t Gscale) {
     case GFS_15_125DPS:
       _gRes = 15.125f / 32768.0f;
       return _gRes;
-      break;
     case GFS_31_25DPS:
       _gRes = 31.25f / 32768.0f;
       return _gRes;
-      break;
     case GFS_62_5DPS:
       _gRes = 62.5f / 32768.0f;
       return _gRes;
-      break;
     case GFS_125DPS:
       _gRes = 125.0f / 32768.0f;
       return _gRes;
-      break;
     case GFS_250DPS:
       _gRes = 250.0f / 32768.0f;
       return _gRes;
-      break;
     case GFS_500DPS:
       _gRes = 500.0f / 32768.0f;
       return _gRes;
-      break;
     case GFS_1000DPS:
       _gRes = 1000.0f / 32768.0f;
       return _gRes;
-      break;
     case GFS_2000DPS:
       _gRes = 2000.0f / 32768.0f;
       return _gRes;
-      break;
+    default:
+      return 0.0;
   }
 }
 

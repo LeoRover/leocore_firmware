@@ -21,10 +21,11 @@ static ros::NodeHandle nh;
 static bool configured = false;
 
 static std_msgs::Float32 battery;
+static std_msgs::Float32 battery_averaged;
 static ros::Publisher battery_pub("firmware/battery", &battery);
-static bool publish_battery = false;
+static ros::Publisher battery_averaged_pub("firmware/battery_averaged", &battery);
 static CircularBuffer<float> battery_buffer_(BATTERY_BUFFER_SIZE);
-static float battery_average;
+static bool publish_battery = false;
 
 static leo_msgs::WheelOdom wheel_odom;
 static ros::Publisher wheel_odom_pub("firmware/wheel_odom", &wheel_odom);
@@ -75,6 +76,7 @@ void getBoardTypeCallback(const std_srvs::TriggerRequest &req,
 void initROS() {
   // Publishers
   nh.advertise(battery_pub);
+  nh.advertise(battery_averaged_pub);
   nh.advertise(wheel_odom_pub);
   nh.advertise(wheel_states_pub);
   nh.advertise(imu_pub);
@@ -136,6 +138,7 @@ void loop() {
 
   if (publish_battery) {
     battery_pub.publish(&battery);
+    battery_averaged_pub.publish(&battery_averaged);
     publish_battery = false;
   }
 
@@ -160,13 +163,14 @@ void update() {
   ++cnt;
 
   static float battery_sum = 0.0F;
+  static float battery_avg = 0.0F;
   float battery_new = static_cast<float>(BATTERY_ADC) * BATTERY_ADC_TO_VOLTAGE;
   battery_sum += battery_new;
   battery_sum -= battery_buffer_.push_back(battery_new);
-  battery_average =
+  battery_avg =
       battery_sum / static_cast<float>(std::min(BATTERY_BUFFER_SIZE, cnt));
 
-  if (battery_average < params.battery_min_voltage) {
+  if (battery_avg < params.battery_min_voltage) {
     if (cnt % 10 == 0) gpio_toggle(LED);
   } else {
     if (!nh.connected()) {
@@ -188,7 +192,8 @@ void update() {
   }
 
   if (cnt % BATTERY_PUB_PERIOD == 0 && !publish_battery) {
-    battery.data = battery_average;
+    battery.data = battery_new;
+    battery_averaged.data = battery_avg;
 
     publish_battery = true;
   }

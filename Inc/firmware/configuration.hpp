@@ -24,7 +24,7 @@ const uint16_t PWM_RANGE = 1000;
 const uint32_t ENCODER_BUFFER_SIZE = 10;
 
 // Number of battery voltage readings to average
-const uint32_t BATTERY_BUFFER_SIZE = 100;
+const uint32_t BATTERY_BUFFER_SIZE = 3000;
 
 // Informative LED GPIO
 const GPIO LED = {LED_GPIO_Port, LED_Pin};

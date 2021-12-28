@@ -9,7 +9,7 @@
 #include "firmware/hal_compat.hpp"
 #include "firmware/motor_controller.hpp"
 
-const char* const FIRMWARE_VERSION = "1.0.0";
+const char* const FIRMWARE_VERSION = "1.0.1";
 
 // UART used for rosserial communication
 static UART_HandleTypeDef& ROSSERIAL_UART = huart1;

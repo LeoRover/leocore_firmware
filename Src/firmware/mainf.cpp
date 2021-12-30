@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <cstring>
+#include <string>
 
 #include <ros.h>
 
@@ -74,6 +75,59 @@ void getBoardTypeCallback(const std_srvs::TriggerRequest &req,
   res.success = true;
 }
 
+struct WheelWrapper {
+  explicit WheelWrapper(WheelController &wheel, std::string wheel_name)
+      : wheel_(wheel),
+        cmd_pwm_topic("firmware/wheel_" + wheel_name + "/cmd_pwm_duty"),
+        cmd_vel_topic("firmware/wheel_" + wheel_name + "/cmd_velocity"),
+        cmd_pwm_sub_(cmd_pwm_topic.c_str(), &WheelWrapper::cmdPWMDutyCallback,
+                     this),
+        cmd_vel_sub_(cmd_vel_topic.c_str(), &WheelWrapper::cmdVelCallback,
+                     this) {}
+
+  void initROS() {
+    nh.subscribe(cmd_pwm_sub_);
+    nh.subscribe(cmd_vel_sub_);
+  }
+
+  void cmdPWMDutyCallback(const std_msgs::Float32 &msg) {
+    wheel_.disable();
+    wheel_.motor.setPWMDutyCycle(msg.data);
+  }
+
+  void cmdVelCallback(const std_msgs::Float32 &msg) {
+    wheel_.enable();
+    wheel_.setTargetVelocity(msg.data);
+  }
+
+ private:
+  WheelController &wheel_;
+  std::string cmd_pwm_topic;
+  std::string cmd_vel_topic;
+  ros::Subscriber<std_msgs::Float32, WheelWrapper> cmd_pwm_sub_;
+  ros::Subscriber<std_msgs::Float32, WheelWrapper> cmd_vel_sub_;
+};
+
+static WheelWrapper wheel_FL_wrapper(dc.wheel_FL, "FL");
+static WheelWrapper wheel_RL_wrapper(dc.wheel_RL, "RL");
+static WheelWrapper wheel_FR_wrapper(dc.wheel_FR, "FR");
+static WheelWrapper wheel_RR_wrapper(dc.wheel_RR, "RR");
+
+static ros::Subscriber<geometry_msgs::Twist> twist_sub("cmd_vel",
+                                                       &cmdVelCallback);
+
+using TriggerService =
+    ros::ServiceServer<std_srvs::TriggerRequest, std_srvs::TriggerResponse>;
+
+static TriggerService reset_odometry_srv("firmware/reset_odometry",
+                                         &resetOdometryCallback);
+static TriggerService firmware_version_srv("firmware/get_firmware_version",
+                                           &getFirmwareVersionCallback);
+static TriggerService board_type_srv("firmware/get_board_type",
+                                     &getBoardTypeCallback);
+static TriggerService reset_board_srv("firmware/reset_board",
+                                      &resetBoardCallback);
+
 void initROS() {
   // Publishers
   nh.advertise(battery_pub);
@@ -83,32 +137,18 @@ void initROS() {
   nh.advertise(imu_pub);
 
   // Subscribers
-  static ros::Subscriber<geometry_msgs::Twist> twist_sub("cmd_vel",
-                                                         &cmdVelCallback);
-
   nh.subscribe(twist_sub);
 
   // Services
-  using TriggerService =
-      ros::ServiceServer<std_srvs::TriggerRequest, std_srvs::TriggerResponse>;
+  nh.advertiseService(reset_odometry_srv);
+  nh.advertiseService(firmware_version_srv);
+  nh.advertiseService(board_type_srv);
+  nh.advertiseService(reset_board_srv);
 
-  static TriggerService reset_odometry_srv("firmware/reset_odometry",
-                                           &resetOdometryCallback);
-  static TriggerService firmware_version_srv("firmware/get_firmware_version",
-                                             &getFirmwareVersionCallback);
-  static TriggerService board_type_srv("firmware/get_board_type",
-                                       &getBoardTypeCallback);
-  static TriggerService reset_board_srv("firmware/reset_board",
-                                        &resetBoardCallback);
-
-  nh.advertiseService<std_srvs::TriggerRequest, std_srvs::TriggerResponse>(
-      reset_odometry_srv);
-  nh.advertiseService<std_srvs::TriggerRequest, std_srvs::TriggerResponse>(
-      firmware_version_srv);
-  nh.advertiseService<std_srvs::TriggerRequest, std_srvs::TriggerResponse>(
-      board_type_srv);
-  nh.advertiseService<std_srvs::TriggerRequest, std_srvs::TriggerResponse>(
-      reset_board_srv);
+  wheel_FL_wrapper.initROS();
+  wheel_RL_wrapper.initROS();
+  wheel_FR_wrapper.initROS();
+  wheel_RR_wrapper.initROS();
 }
 
 void setup() {

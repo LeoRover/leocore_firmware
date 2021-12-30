@@ -24,10 +24,15 @@ class MotorController {
   void init();
 
   /**
-   * Set the power to the motor.
-   * @param power value between -PWM_RANGE and PWM_RANGE
+   * Set the PWM Duty Cycle to the motor driver
+   * @param pwm_duty The PWM Duty Cycle in percents
    */
-  void setPower(int16_t power);
+  void setPWMDutyCycle(float pwm_duty);
+
+  /**
+   * Get the current PWM Duty Cycle
+   */
+  float getPWMDutyCycle();
 
   /**
    * Get the number of encoder ticks.
@@ -63,6 +68,7 @@ class MotorController {
   Polarity motor_polarity_ = Polarity::Normal;
   Polarity encoder_polarity_ = Polarity::Normal;
 
+  float pwm_duty_ = 0.0F;
   uint8_t ticks_prev_quarter_ = 0;
   int32_t ticks_offset_ = 0;
 };

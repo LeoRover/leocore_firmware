@@ -6,7 +6,12 @@ void MotorController::init() {
   gpio_set(config_.mode);    // Turn on Slow-decay mode
 }
 
-void MotorController::setPower(int16_t power) {
+void MotorController::setPWMDutyCycle(float pwm_duty) {
+  pwm_duty_ = clamp(pwm_duty, 100.0F);
+
+  int16_t power = static_cast<int16_t>((pwm_duty_ / 100.0F) *
+                                       static_cast<float>(PWM_RANGE));
+
   if (motor_polarity_ == Polarity::Reversed) power *= -1;
 
   if (power >= 0) {
@@ -17,6 +22,8 @@ void MotorController::setPower(int16_t power) {
     *config_.pwm_ccr = static_cast<uint32_t>(-power);
   }
 }
+
+float MotorController::getPWMDutyCycle() { return pwm_duty_; }
 
 int32_t MotorController::getEncoderCnt() {
   uint16_t ticks_timer = *config_.enc_cnt;

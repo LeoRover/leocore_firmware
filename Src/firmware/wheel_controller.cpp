@@ -18,8 +18,7 @@ WheelController::WheelController(const WheelConfiguration& wheel_conf)
 
 void WheelController::init() {
   v_reg_.setCoeffs(params.motor_pid_p, params.motor_pid_i, params.motor_pid_d);
-  v_reg_.setRange(
-      std::min(static_cast<float>(PWM_RANGE), params.motor_power_limit));
+  v_reg_.setRange(std::min(1000.0F, params.motor_power_limit));
   motor.init();
   motor.resetEncoderCnt();
 }
@@ -42,14 +41,15 @@ void WheelController::update(const uint32_t dt_ms) {
   v_now_ = static_cast<float>(ticks_sum_) / (dt_sum_ * 0.001F);
 
   if (enabled_) {
+    float pwm_duty;
     if (v_now_ == 0.0F && v_target_ == 0.0F) {
       v_reg_.reset();
-      power_ = 0;
+      pwm_duty = 0.0F;
     } else {
       float v_err = v_now_ - v_target_;
-      power_ = v_reg_.update(v_err, dt_ms);
+      pwm_duty = v_reg_.update(v_err, dt_ms) / 10.0F;
     }
-    motor.setPower(power_);
+    motor.setPWMDutyCycle(pwm_duty);
   }
 }
 
@@ -59,10 +59,6 @@ void WheelController::setTargetVelocity(const float speed) {
 
 float WheelController::getVelocity() {
   return (v_now_ / params.motor_encoder_resolution) * (2.0F * PI);
-}
-
-float WheelController::getPWMDutyCycle() {
-  return (static_cast<float>(power_) / static_cast<float>(PWM_RANGE)) * 100.0F;
 }
 
 float WheelController::getTorque() {
@@ -86,7 +82,8 @@ void WheelController::enable() {
 }
 
 void WheelController::disable() {
-  enabled_ = false;
-  power_ = 0;
-  motor.setPower(0);
+  if (enabled_) {
+    enabled_ = false;
+    motor.setPWMDutyCycle(0.0F);
+  }
 }

@@ -80,10 +80,10 @@ void DiffDriveController::updateWheelStates(
   wheel_states.torque[2] = wheel_FR.getTorque();
   wheel_states.torque[3] = wheel_RR.getTorque();
 
-  wheel_states.pwm_duty_cycle[0] = wheel_FL.getPWMDutyCycle();
-  wheel_states.pwm_duty_cycle[1] = wheel_RL.getPWMDutyCycle();
-  wheel_states.pwm_duty_cycle[2] = wheel_FR.getPWMDutyCycle();
-  wheel_states.pwm_duty_cycle[3] = wheel_RR.getPWMDutyCycle();
+  wheel_states.pwm_duty_cycle[0] = wheel_FL.motor.getPWMDutyCycle();
+  wheel_states.pwm_duty_cycle[1] = wheel_RL.motor.getPWMDutyCycle();
+  wheel_states.pwm_duty_cycle[2] = wheel_FR.motor.getPWMDutyCycle();
+  wheel_states.pwm_duty_cycle[3] = wheel_RR.motor.getPWMDutyCycle();
 }
 
 void DiffDriveController::update(uint32_t dt_ms) {

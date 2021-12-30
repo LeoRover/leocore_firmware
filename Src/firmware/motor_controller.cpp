@@ -15,10 +15,10 @@ void MotorController::setPWMDutyCycle(float pwm_duty) {
   if (motor_polarity_ == Polarity::Reversed) power *= -1;
 
   if (power >= 0) {
-    gpio_set(config_.phase);
+    gpio_reset(config_.phase);
     *config_.pwm_ccr = static_cast<uint32_t>(power);
   } else {
-    gpio_reset(config_.phase);
+    gpio_set(config_.phase);
     *config_.pwm_ccr = static_cast<uint32_t>(-power);
   }
 }

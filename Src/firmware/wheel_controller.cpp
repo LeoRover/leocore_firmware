@@ -46,7 +46,7 @@ void WheelController::update(const uint32_t dt_ms) {
       v_reg_.reset();
       pwm_duty = 0.0F;
     } else {
-      float v_err = v_now_ - v_target_;
+      float v_err = v_target_ - v_now_;
       pwm_duty = v_reg_.update(v_err, dt_ms) / 10.0F;
     }
     motor.setPWMDutyCycle(pwm_duty);

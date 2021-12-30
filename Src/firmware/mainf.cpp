@@ -23,7 +23,8 @@ static bool configured = false;
 static std_msgs::Float32 battery;
 static std_msgs::Float32 battery_averaged;
 static ros::Publisher battery_pub("firmware/battery", &battery);
-static ros::Publisher battery_averaged_pub("firmware/battery_averaged", &battery);
+static ros::Publisher battery_averaged_pub("firmware/battery_averaged",
+                                           &battery);
 static CircularBuffer<float> battery_buffer_(BATTERY_BUFFER_SIZE);
 static bool publish_battery = false;
 

@@ -155,16 +155,16 @@ void setup() {
   nh.getHardware()->setUart(&ROSSERIAL_UART);
   nh.initNode();
 
-  initROS();
-
   // Wait for rosserial connection
   while (!nh.connected()) {
     nh.spinOnce();
   }
 
-  imu_receiver.init();
-
   params.load(nh);
+
+  initROS();
+
+  imu_receiver.init();
 
   // Initialize Diff Drive Controller
   dc.init();

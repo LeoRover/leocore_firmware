@@ -18,20 +18,20 @@ static const char SERVICES[] = "rosapi/Services";
     {
     }
 
-    virtual int serialize(unsigned char *outbuffer) const
+    virtual int serialize(unsigned char *outbuffer) const override
     {
       int offset = 0;
       return offset;
     }
 
-    virtual int deserialize(unsigned char *inbuffer)
+    virtual int deserialize(unsigned char *inbuffer) override
     {
       int offset = 0;
      return offset;
     }
 
-    const char * getType(){ return SERVICES; };
-    const char * getMD5(){ return "d41d8cd98f00b204e9800998ecf8427e"; };
+    virtual const char * getType() override { return SERVICES; };
+    virtual const char * getMD5() override { return "d41d8cd98f00b204e9800998ecf8427e"; };
 
   };
 
@@ -44,11 +44,11 @@ static const char SERVICES[] = "rosapi/Services";
       _services_type * services;
 
     ServicesResponse():
-      services_length(0), services(NULL)
+      services_length(0), st_services(), services(nullptr)
     {
     }
 
-    virtual int serialize(unsigned char *outbuffer) const
+    virtual int serialize(unsigned char *outbuffer) const override
     {
       int offset = 0;
       *(outbuffer + offset + 0) = (this->services_length >> (8 * 0)) & 0xFF;
@@ -66,7 +66,7 @@ static const char SERVICES[] = "rosapi/Services";
       return offset;
     }
 
-    virtual int deserialize(unsigned char *inbuffer)
+    virtual int deserialize(unsigned char *inbuffer) override
     {
       int offset = 0;
       uint32_t services_lengthT = ((uint32_t) (*(inbuffer + offset))); 
@@ -92,8 +92,8 @@ static const char SERVICES[] = "rosapi/Services";
      return offset;
     }
 
-    const char * getType(){ return SERVICES; };
-    const char * getMD5(){ return "e44a7e7bcb900acadbcc28b132378f0c"; };
+    virtual const char * getType() override { return SERVICES; };
+    virtual const char * getMD5() override { return "e44a7e7bcb900acadbcc28b132378f0c"; };
 
   };
 

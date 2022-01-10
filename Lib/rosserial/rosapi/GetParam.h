@@ -24,7 +24,7 @@ static const char GETPARAM[] = "rosapi/GetParam";
     {
     }
 
-    virtual int serialize(unsigned char *outbuffer) const
+    virtual int serialize(unsigned char *outbuffer) const override
     {
       int offset = 0;
       uint32_t length_name = strlen(this->name);
@@ -40,7 +40,7 @@ static const char GETPARAM[] = "rosapi/GetParam";
       return offset;
     }
 
-    virtual int deserialize(unsigned char *inbuffer)
+    virtual int deserialize(unsigned char *inbuffer) override
     {
       int offset = 0;
       uint32_t length_name;
@@ -64,8 +64,8 @@ static const char GETPARAM[] = "rosapi/GetParam";
      return offset;
     }
 
-    const char * getType(){ return GETPARAM; };
-    const char * getMD5(){ return "1cc3f281ee24ba9406c3e498e4da686f"; };
+    virtual const char * getType() override { return GETPARAM; };
+    virtual const char * getMD5() override { return "1cc3f281ee24ba9406c3e498e4da686f"; };
 
   };
 
@@ -80,7 +80,7 @@ static const char GETPARAM[] = "rosapi/GetParam";
     {
     }
 
-    virtual int serialize(unsigned char *outbuffer) const
+    virtual int serialize(unsigned char *outbuffer) const override
     {
       int offset = 0;
       uint32_t length_value = strlen(this->value);
@@ -91,7 +91,7 @@ static const char GETPARAM[] = "rosapi/GetParam";
       return offset;
     }
 
-    virtual int deserialize(unsigned char *inbuffer)
+    virtual int deserialize(unsigned char *inbuffer) override
     {
       int offset = 0;
       uint32_t length_value;
@@ -106,8 +106,8 @@ static const char GETPARAM[] = "rosapi/GetParam";
      return offset;
     }
 
-    const char * getType(){ return GETPARAM; };
-    const char * getMD5(){ return "64e58419496c7248b4ef25731f88b8c3"; };
+    virtual const char * getType() override { return GETPARAM; };
+    virtual const char * getMD5() override { return "64e58419496c7248b4ef25731f88b8c3"; };
 
   };
 

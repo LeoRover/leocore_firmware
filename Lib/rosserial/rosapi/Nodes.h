@@ -18,20 +18,20 @@ static const char NODES[] = "rosapi/Nodes";
     {
     }
 
-    virtual int serialize(unsigned char *outbuffer) const
+    virtual int serialize(unsigned char *outbuffer) const override
     {
       int offset = 0;
       return offset;
     }
 
-    virtual int deserialize(unsigned char *inbuffer)
+    virtual int deserialize(unsigned char *inbuffer) override
     {
       int offset = 0;
      return offset;
     }
 
-    const char * getType(){ return NODES; };
-    const char * getMD5(){ return "d41d8cd98f00b204e9800998ecf8427e"; };
+    virtual const char * getType() override { return NODES; };
+    virtual const char * getMD5() override { return "d41d8cd98f00b204e9800998ecf8427e"; };
 
   };
 
@@ -44,11 +44,11 @@ static const char NODES[] = "rosapi/Nodes";
       _nodes_type * nodes;
 
     NodesResponse():
-      nodes_length(0), nodes(NULL)
+      nodes_length(0), st_nodes(), nodes(nullptr)
     {
     }
 
-    virtual int serialize(unsigned char *outbuffer) const
+    virtual int serialize(unsigned char *outbuffer) const override
     {
       int offset = 0;
       *(outbuffer + offset + 0) = (this->nodes_length >> (8 * 0)) & 0xFF;
@@ -66,7 +66,7 @@ static const char NODES[] = "rosapi/Nodes";
       return offset;
     }
 
-    virtual int deserialize(unsigned char *inbuffer)
+    virtual int deserialize(unsigned char *inbuffer) override
     {
       int offset = 0;
       uint32_t nodes_lengthT = ((uint32_t) (*(inbuffer + offset))); 
@@ -92,8 +92,8 @@ static const char NODES[] = "rosapi/Nodes";
      return offset;
     }
 
-    const char * getType(){ return NODES; };
-    const char * getMD5(){ return "3d07bfda1268b4f76b16b7ba8a82665d"; };
+    virtual const char * getType() override { return NODES; };
+    virtual const char * getMD5() override { return "3d07bfda1268b4f76b16b7ba8a82665d"; };
 
   };
 

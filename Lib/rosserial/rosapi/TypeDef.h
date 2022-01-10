@@ -41,16 +41,16 @@ namespace rosapi
 
     TypeDef():
       type(""),
-      fieldnames_length(0), fieldnames(NULL),
-      fieldtypes_length(0), fieldtypes(NULL),
-      fieldarraylen_length(0), fieldarraylen(NULL),
-      examples_length(0), examples(NULL),
-      constnames_length(0), constnames(NULL),
-      constvalues_length(0), constvalues(NULL)
+      fieldnames_length(0), st_fieldnames(), fieldnames(nullptr),
+      fieldtypes_length(0), st_fieldtypes(), fieldtypes(nullptr),
+      fieldarraylen_length(0), st_fieldarraylen(), fieldarraylen(nullptr),
+      examples_length(0), st_examples(), examples(nullptr),
+      constnames_length(0), st_constnames(), constnames(nullptr),
+      constvalues_length(0), st_constvalues(), constvalues(nullptr)
     {
     }
 
-    virtual int serialize(unsigned char *outbuffer) const
+    virtual int serialize(unsigned char *outbuffer) const override
     {
       int offset = 0;
       uint32_t length_type = strlen(this->type);
@@ -138,7 +138,7 @@ namespace rosapi
       return offset;
     }
 
-    virtual int deserialize(unsigned char *inbuffer)
+    virtual int deserialize(unsigned char *inbuffer) override
     {
       int offset = 0;
       uint32_t length_type;
@@ -275,8 +275,8 @@ namespace rosapi
      return offset;
     }
 
-    const char * getType(){ return "rosapi/TypeDef"; };
-    const char * getMD5(){ return "80597571d79bbeef6c9c4d98f30116a0"; };
+    virtual const char * getType() override { return "rosapi/TypeDef"; };
+    virtual const char * getMD5() override { return "80597571d79bbeef6c9c4d98f30116a0"; };
 
   };
 

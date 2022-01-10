@@ -21,7 +21,7 @@ static const char SEARCHPARAM[] = "rosapi/SearchParam";
     {
     }
 
-    virtual int serialize(unsigned char *outbuffer) const
+    virtual int serialize(unsigned char *outbuffer) const override
     {
       int offset = 0;
       uint32_t length_name = strlen(this->name);
@@ -32,7 +32,7 @@ static const char SEARCHPARAM[] = "rosapi/SearchParam";
       return offset;
     }
 
-    virtual int deserialize(unsigned char *inbuffer)
+    virtual int deserialize(unsigned char *inbuffer) override
     {
       int offset = 0;
       uint32_t length_name;
@@ -47,8 +47,8 @@ static const char SEARCHPARAM[] = "rosapi/SearchParam";
      return offset;
     }
 
-    const char * getType(){ return SEARCHPARAM; };
-    const char * getMD5(){ return "c1f3d28f1b044c871e6eff2e9fc3c667"; };
+    virtual const char * getType() override { return SEARCHPARAM; };
+    virtual const char * getMD5() override { return "c1f3d28f1b044c871e6eff2e9fc3c667"; };
 
   };
 
@@ -63,7 +63,7 @@ static const char SEARCHPARAM[] = "rosapi/SearchParam";
     {
     }
 
-    virtual int serialize(unsigned char *outbuffer) const
+    virtual int serialize(unsigned char *outbuffer) const override
     {
       int offset = 0;
       uint32_t length_global_name = strlen(this->global_name);
@@ -74,7 +74,7 @@ static const char SEARCHPARAM[] = "rosapi/SearchParam";
       return offset;
     }
 
-    virtual int deserialize(unsigned char *inbuffer)
+    virtual int deserialize(unsigned char *inbuffer) override
     {
       int offset = 0;
       uint32_t length_global_name;
@@ -89,8 +89,8 @@ static const char SEARCHPARAM[] = "rosapi/SearchParam";
      return offset;
     }
 
-    const char * getType(){ return SEARCHPARAM; };
-    const char * getMD5(){ return "87c264f142c2aeca13349d90aeec0386"; };
+    virtual const char * getType() override { return SEARCHPARAM; };
+    virtual const char * getMD5() override { return "87c264f142c2aeca13349d90aeec0386"; };
 
   };
 

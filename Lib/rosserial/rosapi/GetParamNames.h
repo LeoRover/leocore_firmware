@@ -18,20 +18,20 @@ static const char GETPARAMNAMES[] = "rosapi/GetParamNames";
     {
     }
 
-    virtual int serialize(unsigned char *outbuffer) const
+    virtual int serialize(unsigned char *outbuffer) const override
     {
       int offset = 0;
       return offset;
     }
 
-    virtual int deserialize(unsigned char *inbuffer)
+    virtual int deserialize(unsigned char *inbuffer) override
     {
       int offset = 0;
      return offset;
     }
 
-    const char * getType(){ return GETPARAMNAMES; };
-    const char * getMD5(){ return "d41d8cd98f00b204e9800998ecf8427e"; };
+    virtual const char * getType() override { return GETPARAMNAMES; };
+    virtual const char * getMD5() override { return "d41d8cd98f00b204e9800998ecf8427e"; };
 
   };
 
@@ -44,11 +44,11 @@ static const char GETPARAMNAMES[] = "rosapi/GetParamNames";
       _names_type * names;
 
     GetParamNamesResponse():
-      names_length(0), names(NULL)
+      names_length(0), st_names(), names(nullptr)
     {
     }
 
-    virtual int serialize(unsigned char *outbuffer) const
+    virtual int serialize(unsigned char *outbuffer) const override
     {
       int offset = 0;
       *(outbuffer + offset + 0) = (this->names_length >> (8 * 0)) & 0xFF;
@@ -66,7 +66,7 @@ static const char GETPARAMNAMES[] = "rosapi/GetParamNames";
       return offset;
     }
 
-    virtual int deserialize(unsigned char *inbuffer)
+    virtual int deserialize(unsigned char *inbuffer) override
     {
       int offset = 0;
       uint32_t names_lengthT = ((uint32_t) (*(inbuffer + offset))); 
@@ -92,8 +92,8 @@ static const char GETPARAMNAMES[] = "rosapi/GetParamNames";
      return offset;
     }
 
-    const char * getType(){ return GETPARAMNAMES; };
-    const char * getMD5(){ return "dc7ae3609524b18034e49294a4ce670e"; };
+    virtual const char * getType() override { return GETPARAMNAMES; };
+    virtual const char * getMD5() override { return "dc7ae3609524b18034e49294a4ce670e"; };
 
   };
 

@@ -18,20 +18,20 @@ static const char TOPICSANDRAWTYPES[] = "rosapi/TopicsAndRawTypes";
     {
     }
 
-    virtual int serialize(unsigned char *outbuffer) const
+    virtual int serialize(unsigned char *outbuffer) const override
     {
       int offset = 0;
       return offset;
     }
 
-    virtual int deserialize(unsigned char *inbuffer)
+    virtual int deserialize(unsigned char *inbuffer) override
     {
       int offset = 0;
      return offset;
     }
 
-    const char * getType(){ return TOPICSANDRAWTYPES; };
-    const char * getMD5(){ return "d41d8cd98f00b204e9800998ecf8427e"; };
+    virtual const char * getType() override { return TOPICSANDRAWTYPES; };
+    virtual const char * getMD5() override { return "d41d8cd98f00b204e9800998ecf8427e"; };
 
   };
 
@@ -52,13 +52,13 @@ static const char TOPICSANDRAWTYPES[] = "rosapi/TopicsAndRawTypes";
       _typedefs_full_text_type * typedefs_full_text;
 
     TopicsAndRawTypesResponse():
-      topics_length(0), topics(NULL),
-      types_length(0), types(NULL),
-      typedefs_full_text_length(0), typedefs_full_text(NULL)
+      topics_length(0), st_topics(), topics(nullptr),
+      types_length(0), st_types(), types(nullptr),
+      typedefs_full_text_length(0), st_typedefs_full_text(), typedefs_full_text(nullptr)
     {
     }
 
-    virtual int serialize(unsigned char *outbuffer) const
+    virtual int serialize(unsigned char *outbuffer) const override
     {
       int offset = 0;
       *(outbuffer + offset + 0) = (this->topics_length >> (8 * 0)) & 0xFF;
@@ -100,7 +100,7 @@ static const char TOPICSANDRAWTYPES[] = "rosapi/TopicsAndRawTypes";
       return offset;
     }
 
-    virtual int deserialize(unsigned char *inbuffer)
+    virtual int deserialize(unsigned char *inbuffer) override
     {
       int offset = 0;
       uint32_t topics_lengthT = ((uint32_t) (*(inbuffer + offset))); 
@@ -166,8 +166,8 @@ static const char TOPICSANDRAWTYPES[] = "rosapi/TopicsAndRawTypes";
      return offset;
     }
 
-    const char * getType(){ return TOPICSANDRAWTYPES; };
-    const char * getMD5(){ return "e1432466c8f64316723276ba07c59d12"; };
+    virtual const char * getType() override { return TOPICSANDRAWTYPES; };
+    virtual const char * getMD5() override { return "e1432466c8f64316723276ba07c59d12"; };
 
   };
 

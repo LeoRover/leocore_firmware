@@ -22,7 +22,7 @@ static const char MESSAGEDETAILS[] = "rosapi/MessageDetails";
     {
     }
 
-    virtual int serialize(unsigned char *outbuffer) const
+    virtual int serialize(unsigned char *outbuffer) const override
     {
       int offset = 0;
       uint32_t length_type = strlen(this->type);
@@ -33,7 +33,7 @@ static const char MESSAGEDETAILS[] = "rosapi/MessageDetails";
       return offset;
     }
 
-    virtual int deserialize(unsigned char *inbuffer)
+    virtual int deserialize(unsigned char *inbuffer) override
     {
       int offset = 0;
       uint32_t length_type;
@@ -48,8 +48,8 @@ static const char MESSAGEDETAILS[] = "rosapi/MessageDetails";
      return offset;
     }
 
-    const char * getType(){ return MESSAGEDETAILS; };
-    const char * getMD5(){ return "dc67331de85cf97091b7d45e5c64ab75"; };
+    virtual const char * getType() override { return MESSAGEDETAILS; };
+    virtual const char * getMD5() override { return "dc67331de85cf97091b7d45e5c64ab75"; };
 
   };
 
@@ -62,11 +62,11 @@ static const char MESSAGEDETAILS[] = "rosapi/MessageDetails";
       _typedefs_type * typedefs;
 
     MessageDetailsResponse():
-      typedefs_length(0), typedefs(NULL)
+      typedefs_length(0), st_typedefs(), typedefs(nullptr)
     {
     }
 
-    virtual int serialize(unsigned char *outbuffer) const
+    virtual int serialize(unsigned char *outbuffer) const override
     {
       int offset = 0;
       *(outbuffer + offset + 0) = (this->typedefs_length >> (8 * 0)) & 0xFF;
@@ -80,7 +80,7 @@ static const char MESSAGEDETAILS[] = "rosapi/MessageDetails";
       return offset;
     }
 
-    virtual int deserialize(unsigned char *inbuffer)
+    virtual int deserialize(unsigned char *inbuffer) override
     {
       int offset = 0;
       uint32_t typedefs_lengthT = ((uint32_t) (*(inbuffer + offset))); 
@@ -98,8 +98,8 @@ static const char MESSAGEDETAILS[] = "rosapi/MessageDetails";
      return offset;
     }
 
-    const char * getType(){ return MESSAGEDETAILS; };
-    const char * getMD5(){ return "a6b8995777f214f2ed97a1e4890feb10"; };
+    virtual const char * getType() override { return MESSAGEDETAILS; };
+    virtual const char * getMD5() override { return "a6b8995777f214f2ed97a1e4890feb10"; };
 
   };
 

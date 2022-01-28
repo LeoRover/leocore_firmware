@@ -5,7 +5,8 @@
 #include "mainf.h"
 #include "usart.h"
 
-#include "firmware/diff_drive_controller.hpp"
+#include "diff_drive_controller.hpp"
+
 #include "firmware/hal_compat.hpp"
 #include "firmware/motor_controller.hpp"
 
@@ -59,6 +60,7 @@ const MotorConfiguration MOT_A_CONFIG = {
     .enc_cnt = &TIM5->CNT,
     .pwm_ccr = &TIM1->CCR4,
     .vpropi_adc = &adc_buff[3],
+    .reverse_polarity = false,
 };
 
 const MotorConfiguration MOT_B_CONFIG = {
@@ -69,6 +71,7 @@ const MotorConfiguration MOT_B_CONFIG = {
     .enc_cnt = &TIM4->CNT,
     .pwm_ccr = &TIM9->CCR2,
     .vpropi_adc = &adc_buff[2],
+    .reverse_polarity = false,
 };
 
 const MotorConfiguration MOT_C_CONFIG = {
@@ -79,6 +82,7 @@ const MotorConfiguration MOT_C_CONFIG = {
     .enc_cnt = &TIM3->CNT,
     .pwm_ccr = &TIM1->CCR1,
     .vpropi_adc = &adc_buff[0],
+    .reverse_polarity = true,
 };
 
 const MotorConfiguration MOT_D_CONFIG = {
@@ -89,27 +93,33 @@ const MotorConfiguration MOT_D_CONFIG = {
     .enc_cnt = &TIM2->CNT,
     .pwm_ccr = &TIM9->CCR1,
     .vpropi_adc = &adc_buff[1],
+    .reverse_polarity = true,
 };
+
+extern MotorController MotA;
+extern MotorController MotB;
+extern MotorController MotC;
+extern MotorController MotD;
 
 const DiffDriveConfiguration DD_CONFIG = {
     .wheel_FL_conf =
         {
-            .motor_conf = MOT_C_CONFIG,
-            .reverse_polarity = true,
+            .motor = MotC,
+            .encoder_buffer_size = ENCODER_BUFFER_SIZE,
         },
     .wheel_RL_conf =
         {
-            .motor_conf = MOT_D_CONFIG,
-            .reverse_polarity = true,
+            .motor = MotD,
+            .encoder_buffer_size = ENCODER_BUFFER_SIZE,
         },
     .wheel_FR_conf =
         {
-            .motor_conf = MOT_A_CONFIG,
-            .reverse_polarity = false,
+            .motor = MotA,
+            .encoder_buffer_size = ENCODER_BUFFER_SIZE,
         },
     .wheel_RR_conf =
         {
-            .motor_conf = MOT_B_CONFIG,
-            .reverse_polarity = false,
+            .motor = MotB,
+            .encoder_buffer_size = ENCODER_BUFFER_SIZE,
         },
 };

@@ -2,7 +2,9 @@
 
 #include <ros.h>
 
-struct Parameters {
+#include <diff_drive_controller.hpp>
+
+struct Parameters : DiffDriveParams {
   // Motor
   float motor_encoder_resolution = 878.4F;
   float motor_torque_constant = 1.17647F;
@@ -21,5 +23,3 @@ struct Parameters {
 
   void load(ros::NodeHandle &nh);
 };
-
-extern Parameters params;

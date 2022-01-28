@@ -13,10 +13,11 @@
 
 #include "mainf.h"
 
+#include "wheel_controller.hpp"
+
 #include "firmware/configuration.hpp"
 #include "firmware/imu_receiver.hpp"
 #include "firmware/parameters.hpp"
-#include "firmware/wheel_controller.hpp"
 
 static ros::NodeHandle nh;
 static bool configured = false;
@@ -43,8 +44,15 @@ static bool publish_imu = false;
 
 static bool reset_request = false;
 
+MotorController MotA(MOT_A_CONFIG);
+MotorController MotB(MOT_B_CONFIG);
+MotorController MotC(MOT_C_CONFIG);
+MotorController MotD(MOT_D_CONFIG);
+
 static DiffDriveController dc(DD_CONFIG);
 static ImuReceiver imu_receiver(&IMU_I2C);
+
+Parameters params;
 
 void cmdVelCallback(const geometry_msgs::Twist &msg) {
   dc.setSpeed(msg.linear.x, msg.angular.z);
@@ -167,7 +175,7 @@ void setup() {
   imu_receiver.init();
 
   // Initialize Diff Drive Controller
-  dc.init();
+  dc.init(params);
 
   configured = true;
 }
@@ -240,15 +248,26 @@ void update() {
   }
 
   if (cnt % JOINTS_PUB_PERIOD == 0 && !publish_wheel_states) {
-    wheel_states.stamp = nh.now();
-    dc.updateWheelStates(wheel_states);
+    auto dd_wheel_states = dc.getWheelStates();
 
-    publish_wheel_states = true;
+    wheel_states.stamp = nh.now();
+    for (size_t i = 0; i < 4; i++) {
+      wheel_states.position[i] = dd_wheel_states.position[i];
+      wheel_states.velocity[i] = dd_wheel_states.velocity[i];
+      wheel_states.torque[i] = dd_wheel_states.torque[i];
+      wheel_states.pwm_duty_cycle[i] = dd_wheel_states.pwm_duty_cycle[i];
+    }
   }
 
   if (cnt % ODOM_PUB_PERIOD == 0 && !publish_wheel_odom) {
-    wheel_odom = dc.getOdom();
+    auto dd_odom = dc.getOdom();
+
     wheel_odom.stamp = nh.now();
+    wheel_odom.velocity_lin = dd_odom.velocity_lin;
+    wheel_odom.velocity_ang = dd_odom.velocity_ang;
+    wheel_odom.pose_x = dd_odom.pose_x;
+    wheel_odom.pose_y = dd_odom.pose_y;
+    wheel_odom.pose_yaw = dd_odom.pose_yaw;
 
     publish_wheel_odom = true;
   }

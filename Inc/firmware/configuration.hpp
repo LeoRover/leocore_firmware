@@ -105,21 +105,21 @@ const DiffDriveConfiguration DD_CONFIG = {
     .wheel_FL_conf =
         {
             .motor = MotC,
-            .encoder_buffer_size = ENCODER_BUFFER_SIZE,
+            .velocity_rolling_window_size = 10,
         },
     .wheel_RL_conf =
         {
             .motor = MotD,
-            .encoder_buffer_size = ENCODER_BUFFER_SIZE,
+            .velocity_rolling_window_size = 10,
         },
     .wheel_FR_conf =
         {
             .motor = MotA,
-            .encoder_buffer_size = ENCODER_BUFFER_SIZE,
+            .velocity_rolling_window_size = 10,
         },
     .wheel_RR_conf =
         {
             .motor = MotB,
-            .encoder_buffer_size = ENCODER_BUFFER_SIZE,
+            .velocity_rolling_window_size = 10,
         },
 };

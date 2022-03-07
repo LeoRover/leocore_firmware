@@ -257,6 +257,8 @@ void update() {
       wheel_states.torque[i] = dd_wheel_states.torque[i];
       wheel_states.pwm_duty_cycle[i] = dd_wheel_states.pwm_duty_cycle[i];
     }
+
+    publish_wheel_states = true;
   }
 
   if (cnt % ODOM_PUB_PERIOD == 0 && !publish_wheel_odom) {

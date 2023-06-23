@@ -4,7 +4,7 @@
 
 #include <diff_drive_lib/diff_drive_controller.hpp>
 
-struct Parameters : diff_drive_lib::DiffDriveParams {
+struct Parameters : diff_drive_lib::RobotParams {
   // Override inherited parameters
   Parameters() {
     // Motor
@@ -16,13 +16,15 @@ struct Parameters : diff_drive_lib::DiffDriveParams {
     wheel_pwm_duty_limit = 100.0F;
 
     // Differential drive
-    dd_wheel_radius = 0.0625F;
-    dd_wheel_separation = 0.33F;
-    dd_angular_velocity_multiplier = 1.91F;
-    dd_input_timeout = 500;
+    robot_wheel_radius = 0.0625F;
+    robot_wheel_separation = 0.33F;
+    robot_angular_velocity_multiplier = 1.91F;
+    robot_input_timeout = 500;
   }
 
   float battery_min_voltage = 10.0;
+
+  bool mecanum_wheels = false;
 
   void load(ros::NodeHandle &nh);
 };

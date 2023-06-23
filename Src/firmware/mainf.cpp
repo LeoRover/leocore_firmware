@@ -49,13 +49,13 @@ MotorController MotB(MOT_B_CONFIG);
 MotorController MotC(MOT_C_CONFIG);
 MotorController MotD(MOT_D_CONFIG);
 
-static diff_drive_lib::DiffDriveController dc(DD_CONFIG);
+static diff_drive_lib::DiffDriveController dc(ROBOT_CONFIG);
 static ImuReceiver imu_receiver(&IMU_I2C);
 
 Parameters params;
 
 void cmdVelCallback(const geometry_msgs::Twist &msg) {
-  dc.setSpeed(msg.linear.x, msg.angular.z);
+  dc.setSpeed(msg.linear.x, msg.linear.y, msg.angular.z);
 }
 
 void resetOdometryCallback(const std_srvs::TriggerRequest &req,
@@ -265,7 +265,7 @@ void update() {
     auto dd_odom = dc.getOdom();
 
     wheel_odom.stamp = nh.now();
-    wheel_odom.velocity_lin = dd_odom.velocity_lin;
+    wheel_odom.velocity_lin = dd_odom.velocity_lin_x;
     wheel_odom.velocity_ang = dd_odom.velocity_ang;
     wheel_odom.pose_x = dd_odom.pose_x;
     wheel_odom.pose_y = dd_odom.pose_y;

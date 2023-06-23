@@ -99,7 +99,7 @@ extern MotorController MotB;
 extern MotorController MotC;
 extern MotorController MotD;
 
-const diff_drive_lib::DiffDriveConfiguration DD_CONFIG = {
+const diff_drive_lib::RobotConfiguration ROBOT_CONFIG = {
     .wheel_FL_conf =
         {
             .motor = MotC,

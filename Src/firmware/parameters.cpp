@@ -5,6 +5,12 @@
 static constexpr int TIMEOUT = 1000;
 
 void Parameters::load(ros::NodeHandle &nh) {
+  nh.getParam("firmware/mecanum_wheels", &mecanum_wheels, 1, TIMEOUT);
+  if(mecanum_wheels) {
+    robot_wheel_radius = 0.0635F;
+    robot_wheel_separation = 0.405F;
+  }
+  
   nh.getParam("firmware/wheels/encoder_resolution", &wheel_encoder_resolution, 1,
               TIMEOUT);
   nh.getParam("firmware/wheels/torque_constant", &wheel_torque_constant, 1,
@@ -22,5 +28,4 @@ void Parameters::load(ros::NodeHandle &nh) {
   nh.getParam("firmware/diff_drive/input_timeout", &robot_input_timeout, 1,
               TIMEOUT);
   nh.getParam("firmware/battery_min_voltage", &battery_min_voltage, 1, TIMEOUT);
-  nh.getParam("firmware/mecanum_wheels", &mecanum_wheels, 1, TIMEOUT);
 }

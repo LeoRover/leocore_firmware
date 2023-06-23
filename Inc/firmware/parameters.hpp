@@ -2,9 +2,9 @@
 
 #include <ros.h>
 
-#include <diff_drive_controller.hpp>
+#include <diff_drive_lib/diff_drive_controller.hpp>
 
-struct Parameters : DiffDriveParams {
+struct Parameters : diff_drive_lib::DiffDriveParams {
   // Override inherited parameters
   Parameters() {
     // Motor

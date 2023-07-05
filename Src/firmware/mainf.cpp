@@ -170,7 +170,7 @@ void setup() {
 
   params.load(nh);
   if(params.mecanum_wheels){
-    controller = new diff_drive_lib::DiffDriveController(ROBOT_CONFIG);
+    controller = new diff_drive_lib::MecanumController(ROBOT_CONFIG);
   } else {
     controller = new diff_drive_lib::DiffDriveController(ROBOT_CONFIG);
   }
@@ -269,7 +269,8 @@ void update() {
     auto dd_odom = controller->getOdom();
 
     wheel_odom.stamp = nh.now();
-    wheel_odom.velocity_lin = dd_odom.velocity_lin_x;
+    wheel_odom.velocity_lin_x = dd_odom.velocity_lin_x;
+    wheel_odom.velocity_lin_y = dd_odom.velocity_lin_y;
     wheel_odom.velocity_ang = dd_odom.velocity_ang;
     wheel_odom.pose_x = dd_odom.pose_x;
     wheel_odom.pose_y = dd_odom.pose_y;

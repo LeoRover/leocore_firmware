@@ -6,6 +6,7 @@
 #include "usart.h"
 
 #include "diff_drive_lib/diff_drive_controller.hpp"
+#include "diff_drive_lib/mecanum_controller.hpp"
 
 #include "firmware/hal_compat.hpp"
 #include "firmware/motor_controller.hpp"

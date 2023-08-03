@@ -9,7 +9,9 @@
 
 ICM42605::ICM42605(I2C_HandleTypeDef* i2c_bus) : _i2c_bus(i2c_bus) {}
 
-uint8_t ICM42605::getChipID() { return readByte(ICM42605_WHO_AM_I); }
+uint8_t ICM42605::getChipID() {
+  return readByte(ICM42605_WHO_AM_I);
+}
 
 float ICM42605::getAres(uint8_t Ascale) {
   switch (Ascale) {

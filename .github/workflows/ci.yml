@@ -10,9 +10,19 @@ on:
       - master
 
 jobs:
-  build:
+  clang-format-check:
+    name: Clang-format formatting check
     runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run clang-format style check.
+      uses: jidicula/clang-format-action@v4.11.0
+      with:
+        clang-format-version: '14'
 
+  build:
+    name: PlatformIO build
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Cache pip

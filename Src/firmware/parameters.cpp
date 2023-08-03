@@ -8,10 +8,8 @@ void Parameters::load(ros::NodeHandle &nh) {
   nh.getParam("firmware/mecanum_wheels", &mecanum_wheels, 1, TIMEOUT);
   if (mecanum_wheels) {
     robot_wheel_radius = 0.0635F;
-    robot_wheel_separation = 0.405F;
-    robot_wheel_base = 0.3052F;
+    robot_wheel_separation = 0.37F;
     robot_angular_velocity_multiplier = 1.0F;
-    robot_input_timeout = 500;
     nh.getParam("firmware/mecanum_drive/wheel_radius", &robot_wheel_radius, 1,
                 TIMEOUT);
     nh.getParam("firmware/mecanum_drive/wheel_separation",

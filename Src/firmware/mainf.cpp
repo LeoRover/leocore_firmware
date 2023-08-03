@@ -14,6 +14,8 @@
 
 #include "mainf.h"
 
+#include "diff_drive_lib/diff_drive_controller.hpp"
+#include "diff_drive_lib/mecanum_controller.hpp"
 #include "diff_drive_lib/wheel_controller.hpp"
 
 #include "firmware/configuration.hpp"

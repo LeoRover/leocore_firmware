@@ -124,10 +124,10 @@ struct WheelWrapper {
   ros::Subscriber<std_msgs::Float32, WheelWrapper> cmd_vel_sub_;
 };
 
-static WheelWrapper wheel_FL_wrapper(controller->wheel_FL, "FL");
-static WheelWrapper wheel_RL_wrapper(controller->wheel_RL, "RL");
-static WheelWrapper wheel_FR_wrapper(controller->wheel_FR, "FR");
-static WheelWrapper wheel_RR_wrapper(controller->wheel_RR, "RR");
+static WheelWrapper *wheel_FL_wrapper;
+static WheelWrapper *wheel_RL_wrapper;
+static WheelWrapper *wheel_FR_wrapper;
+static WheelWrapper *wheel_RR_wrapper;
 
 static ros::Subscriber<geometry_msgs::Twist> twist_sub("cmd_vel",
                                                        &cmdVelCallback);
@@ -165,10 +165,10 @@ void initROS() {
   nh.advertiseService(board_type_srv);
   nh.advertiseService(reset_board_srv);
 
-  wheel_FL_wrapper.initROS();
-  wheel_RL_wrapper.initROS();
-  wheel_FR_wrapper.initROS();
-  wheel_RR_wrapper.initROS();
+  wheel_FL_wrapper->initROS();
+  wheel_RL_wrapper->initROS();
+  wheel_FR_wrapper->initROS();
+  wheel_RR_wrapper->initROS();
 }
 
 void setup() {
@@ -186,6 +186,12 @@ void setup() {
   } else {
     controller = new diff_drive_lib::DiffDriveController(ROBOT_CONFIG);
   }
+
+  wheel_FL_wrapper = new WheelWrapper(controller->wheel_FL, "FL");
+  wheel_RL_wrapper = new WheelWrapper(controller->wheel_RL, "RL");
+  wheel_FR_wrapper = new WheelWrapper(controller->wheel_FR, "FR");
+  wheel_RR_wrapper = new WheelWrapper(controller->wheel_RR, "RR");
+
   initROS();
 
   imu_receiver.init();
